@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="author" content="Vseznaushchy (Zhaukenov Sanzhar)">
+<meta name="theme-color" content="#2a1c10">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Карамель">
+<title>Карамель Хайзенберга</title>
+<style>
+:root{
+  --sand:#e9cf8f;--sand2:#d6aa55;--dust:#f4e3b2;--rust:#b4532a;--rust2:#7d3418;
+  --brown:#2a1c10;--brown2:#3b2816;--brown3:#4d3520;--olive:#6a7a36;--green:#2f8a43;--green2:#1c5a2b;
+  --blue:#37d4ff;--blue2:#0a8fbf;--red:#d6392b;--ink:#1a110a;--lime:#b6ff7a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+html,body{margin:0;height:100%;background:#0c0804;overflow:hidden;font-family:"Trebuchet MS","Segoe UI",Roboto,Arial,sans-serif;color:var(--dust)}
+button{font-family:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+#phone{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:min(100vw,calc(100vh*3/4));width:min(100vw,calc(100dvh*3/4));overflow:hidden;background:var(--brown);font-size:var(--fs,16px);box-shadow:0 0 3em #000}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding-top:calc(env(safe-area-inset-top,0px) + .9em)}
+#screen-menu{padding-top:0}
+.screen.on{display:flex}
+.ic{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.25em;flex:none}
+.ic.big{width:2.2em;height:2.2em}
+.ic.xl{width:3em;height:3em}
+
+/* ---------- MENU ---------- */
+#screen-menu{background:#1a0f08;overflow:hidden}
+#menu-bg{position:absolute;inset:0;width:100%;height:100%}
+.menu-in{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(2.6em + env(safe-area-inset-top,0px)) 1.2em calc(2.2em + env(safe-area-inset-bottom,0px))}
+.title{display:flex;flex-direction:column;align-items:center;gap:.25em;margin-top:.4em}
+.tl{display:flex;align-items:center;justify-content:center;gap:.12em;font-family:Impact,"Arial Black","Franklin Gothic Heavy",sans-serif;font-size:2.55em;letter-spacing:.03em;color:#f7f0d8;text-shadow:0 .06em 0 #000a,0 0 .5em #000c;line-height:1}
+.tl .rest{transform:translateY(.02em)}
+.el{position:relative;display:inline-flex;align-items:center;justify-content:center;width:1.45em;height:1.45em;background:linear-gradient(145deg,#46b65e,#1b6a2e);border:.07em solid #f7f0d8;border-radius:.1em;box-shadow:0 .06em .18em #000b,inset 0 0 .3em #0006;text-shadow:none;color:#f7f0d8}
+.el b{font-size:.95em;font-weight:900;margin-top:.1em}
+.el i{position:absolute;left:.16em;top:.08em;font-style:normal;font-size:.26em;font-family:"Courier New",monospace;font-weight:700}
+.el u{position:absolute;left:0;right:0;bottom:.06em;text-align:center;text-decoration:none;font-size:.2em;font-family:"Courier New",monospace}
+.tag{margin-top:.8em;font-size:.82em;letter-spacing:.18em;text-transform:uppercase;color:#f8e7b0;text-shadow:0 .1em .2em #000;text-align:center}
+.tag b{color:var(--blue)}
+.menu-btns{width:100%;display:flex;flex-direction:column;align-items:center;gap:.5em;margin-bottom:.3em}
+.menu-btns .mb{width:84%}
+.mb{display:flex;align-items:center;gap:.7em;width:100%;min-height:2.5em;padding:.35em .9em;border-radius:.6em;font-weight:800;font-size:.9em;letter-spacing:.06em;text-transform:uppercase;border:.14em solid #1a110a;box-shadow:0 .25em 0 #0009,inset 0 .1em 0 #ffffff33;text-align:left}
+.mb:active{transform:translateY(.15em);box-shadow:0 .1em 0 #0009}
+.mb.play{background:linear-gradient(180deg,#48b75f,#1f7234);color:#f4ffe8;min-height:2.8em;font-size:1.05em}
+.mb.sand{background:linear-gradient(180deg,#e6c77f,#b58a3c);color:#2a1c10}
+.mb.blue{background:linear-gradient(180deg,#52dcff,#0c8fc0);color:#06222f}
+.mb.red{background:linear-gradient(180deg,#a8482a,#6a2a14);color:#ffe6c8}
+.mb .ic{width:1.3em;height:1.3em}
+.tw{position:absolute;z-index:2;bottom:20%;left:0;animation:roll 14s linear infinite}
+.tw>div{animation:bounce .9s ease-in-out infinite}
+.tw svg{width:2.6em;height:2.6em;display:block}
+@keyframes roll{from{transform:translateX(-12vw)}to{transform:translateX(112vw)}}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-1em) rotate(180deg)}}
+.dust{position:absolute;z-index:2;width:.3em;height:.3em;border-radius:50%;background:#f4d9a0;opacity:.5;animation:drift 9s linear infinite}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(-60vw,-1.5em)}}
+
+/* ---------- GAME ---------- */
+#screen-game{background:radial-gradient(120% 80% at 50% 0%,#4a3420 0%,#2a1c10 60%,#1d130b 100%)}
+#hud{flex:none;padding:.5em .6em .45em;background:linear-gradient(180deg,#1a110a,#2a1c10);border-bottom:.14em solid #6b4a26;box-shadow:0 .2em .6em #0008;z-index:5}
+.hud-row{display:flex;align-items:center;gap:.5em}
+.chip{display:flex;align-items:center;gap:.35em;padding:.28em .7em;border-radius:1em;font-weight:800;font-family:"Courier New",monospace;border:.1em solid #0008;background:#00000055;font-size:1.02em}
+.chip.cash{color:#b9f08c}.chip.cry{color:var(--blue)}
+.hud-lab{margin-left:auto;font-size:.72em;text-align:right;color:var(--sand2);line-height:1.1;max-width:8em}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin-top:.4em}
+.bar-l{display:flex;align-items:center;gap:.25em;font-size:.62em;font-weight:800;letter-spacing:.06em;color:var(--sand);text-transform:uppercase}
+.bar-l span{margin-left:auto;font-family:"Courier New",monospace}
+.bar-t{height:.6em;margin-top:.15em;background:#0009;border-radius:.4em;overflow:hidden;border:.08em solid #000a}
+.bar-t i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6aa832,#e0b030 60%,#d6392b);transition:width .25s}
+.bar-t.cart i{background:linear-gradient(90deg,#3aa6d6,#8a62d6 60%,#d6392b)}
+.bar.danger .bar-l{color:#ff8a70;animation:blink .8s steps(2) infinite}
+@keyframes blink{50%{opacity:.45}}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;padding:.5em 0 1em;-webkit-overflow-scrolling:touch}
+#content::-webkit-scrollbar{width:0}
+#nav{flex:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:linear-gradient(180deg,#2a1c10,#150d07);border-top:.14em solid #6b4a26;padding-bottom:max(env(safe-area-inset-bottom,0px),1.6em)}
+#nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2em;padding:.5em .1em .45em;font-size:.5em;font-weight:800;letter-spacing:.01em;text-transform:uppercase;color:#a58c60;min-height:4.8em;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nav button .ic{width:2.1em;height:2.1em}
+#nav button.on{color:var(--blue);background:linear-gradient(180deg,#0000,#37d4ff22)}
+.card{background:linear-gradient(180deg,#43301b,#2e2012);border:.12em solid #6b4a26;border-radius:.8em;padding:.8em;margin:.55em .6em;box-shadow:0 .2em .5em #0007}
+.card h3{margin:0 0 .35em;font-size:1em;letter-spacing:.05em;text-transform:uppercase;color:var(--sand);display:flex;align-items:center;gap:.4em}
+.card p{margin:.2em 0;font-size:.82em;line-height:1.3;color:#d8c597}
+.sec{margin:.9em .8em .1em;font-size:.78em;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--sand2);display:flex;align-items:center;gap:.5em}
+.sec:after{content:"";flex:1;height:.1em;background:linear-gradient(90deg,#d6aa5588,#0000)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-height:2.7em;padding:.4em .9em;border-radius:.6em;font-weight:800;font-size:.86em;letter-spacing:.04em;border:.12em solid #1a110a;box-shadow:0 .2em 0 #0009,inset 0 .08em 0 #ffffff33;text-transform:uppercase}
+.btn:active:not(:disabled){transform:translateY(.12em);box-shadow:0 .08em 0 #0009}
+.btn:disabled{opacity:.45;filter:grayscale(.5)}
+.btn.green{background:linear-gradient(180deg,#48b75f,#1f7234);color:#f4ffe8}
+.btn.blue{background:linear-gradient(180deg,#52dcff,#0c8fc0);color:#06222f}
+.btn.sand{background:linear-gradient(180deg,#e6c77f,#b58a3c);color:#2a1c10}
+.btn.rust{background:linear-gradient(180deg,#c35e32,#7d3418);color:#ffe6c8}
+.btn.dark{background:linear-gradient(180deg,#4d3a26,#2d2014);color:var(--sand)}
+.btn.sm{min-height:2.2em;padding:.2em .6em;font-size:.74em}
+.btn.cta{width:100%;min-height:3.4em;font-size:1.05em;margin-top:.6em}
+.row{display:flex;align-items:center;gap:.6em}
+.btn-row{display:flex;gap:.5em;margin-top:.5em}
+.btn-row .btn{flex:1}
+.cm{width:3em;height:3em;flex:none}
+.cm svg,.candy{width:100%;height:100%;display:block;filter:drop-shadow(0 .12em .15em #0008)}
+.labsvg{width:100%;height:auto;border-radius:.5em;display:block;border:.1em solid #1a110a}
+.stats{display:flex;flex-wrap:wrap;gap:.4em;margin-top:.5em}
+.pill{display:inline-flex;align-items:center;gap:.3em;padding:.2em .6em;border-radius:1em;background:#0006;border:.08em solid #0009;font-size:.72em;font-weight:700;color:var(--sand)}
+.pill.g{color:#b9f08c}.pill.b{color:var(--blue)}.pill.r{color:#ff9a80}
+.sel{display:flex;align-items:center;gap:.4em}
+.sel .arr{width:2.8em;height:3.4em;border-radius:.6em;background:#00000066;border:.1em solid #0009;color:var(--sand);display:flex;align-items:center;justify-content:center}
+.sel .arr:active{background:#ffffff22}
+.selc{flex:1;display:flex;align-items:center;gap:.7em;justify-content:center;min-width:0}
+.selc .cm{width:4.2em;height:4.2em}
+.selc div{min-width:0}
+.selc b{display:block;font-size:1.02em;color:#fff3cf;line-height:1.1}
+.selc small{display:block;font-size:.72em;color:#c9b27c;margin-top:.2em}
+.pots{display:flex;align-items:center;justify-content:space-between;margin-top:.7em;font-size:.86em;font-weight:700}
+.stepper{display:flex;align-items:center;gap:.5em}
+.stepper button{width:2.6em;height:2.6em;border-radius:.5em;background:#00000066;border:.1em solid #0009;display:flex;align-items:center;justify-content:center;color:var(--sand)}
+.stepper b{min-width:2.8em;text-align:center;font-family:"Courier New",monospace;font-size:1.05em}
+.needs{display:flex;flex-wrap:wrap;gap:.4em;margin-top:.7em}
+.need{display:flex;align-items:center;gap:.3em;padding:.3em .55em;border-radius:.5em;font-size:.72em;font-weight:700;background:#0006;border:.1em solid #0009}
+.need span{color:#d8c597}
+.need b{font-family:"Courier New",monospace}
+.need.ok b{color:#b9f08c}.need.bad b{color:#ff8a70}
+.need.bad{border-color:#d6392b88}
+.est{margin-top:.6em;font-size:.78em;color:#d8c597;display:flex;justify-content:space-between}
+.hint{font-size:.74em;color:#c9b27c;margin-top:.45em;text-align:center}
+.srow{display:flex;align-items:center;gap:.6em;padding:.4em 0;border-top:.08em solid #0006}
+.srow:first-of-type{border-top:0}
+.srow .cm{width:2.6em;height:2.6em}
+.sname{flex:1;font-size:.84em;font-weight:700;min-width:0;color:#fff3cf;line-height:1.15}
+.sname small{display:block;font-weight:600;color:#c9b27c;font-size:.82em}
+.sprice{font-family:"Courier New",monospace;font-weight:800;color:#b9f08c;font-size:.84em;text-align:right;min-width:3.4em}
+.dem{height:.6em;background:#0009;border-radius:.4em;overflow:hidden;border:.08em solid #000a;margin:.4em 0 .15em}
+.dem i{display:block;height:100%;background:linear-gradient(90deg,#2aa6d0,#37d4ff);width:0;transition:width .3s}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:.4em;margin:.6em .6em 0}
+.tabs button{padding:.7em;border-radius:.6em;background:#00000066;border:.1em solid #0009;font-weight:800;font-size:.82em;text-transform:uppercase;letter-spacing:.06em;color:#a58c60;display:flex;align-items:center;justify-content:center;gap:.4em}
+.tabs button.on{background:linear-gradient(180deg,#52dcff,#0c8fc0);color:#06222f}
+.chead{display:flex;align-items:center;gap:.6em}
+.chead .ic{width:2.2em;height:2.2em;color:var(--sand2)}
+.chead b{display:block;font-size:.95em;color:#fff3cf;line-height:1.1}
+.chead small{font-size:.7em;color:#c9b27c}
+.locked{opacity:.9}
+.pips{display:flex;gap:.25em;margin:.3em 0}
+.pips i{width:1.1em;height:.5em;border-radius:.2em;background:#0008;border:.08em solid #000}
+.pips i.f{background:linear-gradient(180deg,#6fe0ff,#0c8fc0)}
+.tagr{display:inline-block;padding:.1em .5em;border-radius:.4em;font-size:.68em;font-weight:900;letter-spacing:.08em;text-transform:uppercase;background:#2f8a43;color:#eaffe0}
+.tagr.cur{background:var(--blue);color:#06222f}
+.how{counter-reset:s}
+.how li{list-style:none;font-size:.8em;margin:.35em 0;padding-left:1.8em;position:relative;color:#e6d4a4}
+.how li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-.05em;width:1.4em;height:1.4em;border-radius:50%;background:var(--green);color:#fff;font-weight:900;text-align:center;line-height:1.4em;font-size:.9em}
+.how{padding:0;margin:.3em 0 0}
+
+/* ---------- MODAL / TOAST ---------- */
+#modal{position:absolute;inset:0;z-index:50;background:#000a;display:none;align-items:center;justify-content:center;padding:1.2em}
+#modal.on{display:flex}
+.mcard{width:100%;background:linear-gradient(180deg,#4d3520,#2b1d10);border:.15em solid #d6aa55;border-radius:.9em;padding:1.1em;box-shadow:0 .5em 2em #000;animation:pop .2s ease-out}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.mcard h3{margin:0 0 .5em;font-size:1.1em;color:var(--sand);text-transform:uppercase;letter-spacing:.06em}
+.mcard p{margin:0 0 .9em;font-size:.88em;line-height:1.4;color:#eadbb0}
+.mbtns{display:flex;flex-direction:column;gap:.5em}
+.mbtns .btn{width:100%}
+#toasts{position:absolute;left:0;right:0;top:5.5em;z-index:60;display:flex;flex-direction:column;align-items:center;gap:.4em;pointer-events:none}
+.toast{max-width:90%;padding:.55em 1em;border-radius:.7em;background:#102a18;border:.12em solid #48b75f;color:#e4ffd0;font-size:.82em;font-weight:700;text-align:center;box-shadow:0 .3em 1em #000a;animation:tin .25s ease-out}
+.toast.bad{background:#3a1410;border-color:#d6392b;color:#ffd7ce}
+@keyframes tin{from{transform:translateY(-.8em);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- BREW ---------- */
+#screen-brew{background:radial-gradient(100% 60% at 50% 20%,#4a3420,#241709 70%)}
+.b-top{flex:none;display:flex;align-items:center;gap:.6em;padding:.6em .7em .3em}
+.b-title{flex:1;font-weight:900;font-size:.95em;letter-spacing:.04em;text-transform:uppercase;color:var(--sand);line-height:1.1;text-align:right}
+.b-prog{flex:none;height:.5em;margin:0 .7em;background:#0009;border-radius:.4em;overflow:hidden;border:.08em solid #000}
+.b-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#48b75f,#b6ff7a)}
+.queue{flex:none;display:flex;gap:.4em;justify-content:center;padding:.5em .5em .2em;flex-wrap:wrap}
+.qi{display:flex;align-items:center;gap:.25em;padding:.25em .55em;border-radius:1em;font-size:.66em;font-weight:800;background:#0006;border:.1em solid #0009;color:#a58c60;text-transform:uppercase}
+.qi.cur{color:#06222f;background:var(--blue);border-color:#fff;animation:blink .6s steps(2) infinite}
+.qi.perf{background:#2f8a43;color:#fff}.qi.good{background:#6a9a2a;color:#fff}.qi.ok{background:#b58a3c;color:#2a1c10}.qi.miss{background:#7d3418;color:#ffd0b8}
+.scene.night{opacity:.12;filter:brightness(.4)}
+.scene{flex:1;min-height:6em;display:flex;align-items:center;justify-content:center;padding:0 .6em;position:relative}
+.scene svg{width:100%;height:100%;max-height:100%}
+.fl{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(.35);transition:transform .25s;animation:fl .35s ease-in-out infinite alternate}
+.fl:nth-child(2n){animation-duration:.27s}
+.hotf .fl{transform:scaleY(1.2)}
+@keyframes fl{from{opacity:.8}to{opacity:1}}
+.bub{transform-box:fill-box;transform-origin:50% 50%;animation:bub 1.6s ease-in infinite}
+.bub:nth-child(2){animation-delay:.3s}.bub:nth-child(3){animation-delay:.7s}.bub:nth-child(4){animation-delay:1s}.bub:nth-child(5){animation-delay:.5s}.bub:nth-child(6){animation-delay:1.3s}
+@keyframes bub{0%{transform:translateY(4px) scale(.4);opacity:0}30%{opacity:.9}100%{transform:translateY(-14px) scale(1.2);opacity:0}}
+.steam{animation:steam 2.4s ease-out infinite;opacity:0}
+.steam:nth-child(2){animation-delay:.8s}.steam:nth-child(3){animation-delay:1.5s}
+@keyframes steam{0%{transform:translateY(8px);opacity:0}30%{opacity:.55}100%{transform:translateY(-26px);opacity:0}}
+.g-wrap{flex:none;padding:.3em .8em}
+.g-l{display:flex;justify-content:space-between;font-size:.66em;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:.3em}
+.g-l b{font-family:"Courier New",monospace;color:var(--lime)}
+.gauge{position:relative;height:2.1em;border-radius:1.05em;background:linear-gradient(90deg,#1b4a7a,#1f6f7a 35%,#5a6a2a 55%,#8a5a1a 75%,#8a2a1a);border:.12em solid #1a110a;overflow:hidden;box-shadow:inset 0 .2em .4em #0008}
+.gauge:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#0000 0,#0000 9.5%,#ffffff22 9.5%,#ffffff22 10%)}
+.zone{position:absolute;top:0;bottom:0;background:rgba(80,255,100,.32);border-left:.2em solid var(--lime);border-right:.2em solid var(--lime);box-shadow:inset 0 0 .8em #7dff6a}
+.mk{position:absolute;top:-.1em;bottom:-.1em;width:.5em;margin-left:-.25em;background:#fff;border-radius:.2em;box-shadow:0 0 .7em #fff}
+.ring-box{flex:none;display:flex;align-items:center;gap:.8em;padding:.2em .8em}
+.ring-box svg{width:8em;height:8em;flex:none}
+.rg{fill:none;stroke:var(--blue);stroke-width:4}
+.tg{fill:#37d4ff22;stroke:#fff;stroke-width:3;stroke-dasharray:5 4}
+.r-txt{flex:1;min-width:0}
+.r-txt small{font-size:.66em;letter-spacing:.1em;text-transform:uppercase;color:#a58c60;font-weight:800}
+.r-txt b{display:block;font-size:1.05em;color:#fff3cf;line-height:1.15;margin-top:.15em}
+.fb{display:block;margin-top:.4em;font-size:1.3em;font-weight:900;letter-spacing:.06em;min-height:1.2em}
+.fb.perf{color:var(--lime)}.fb.good{color:#d6ff6a}.fb.ok{color:#ffd36a}.fb.miss{color:#ff7a62}
+.b-btns{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:.6em;padding:.5em .8em calc(.8em + env(safe-area-inset-bottom))}
+.big{min-height:5.2em;border-radius:.9em;font-weight:900;font-size:1.05em;letter-spacing:.06em;text-transform:uppercase;border:.14em solid #1a110a;box-shadow:0 .3em 0 #0009,inset 0 .1em 0 #ffffff44;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2em;touch-action:none}
+.big .ic{width:1.9em;height:1.9em}
+.big.heat{background:linear-gradient(180deg,#ee7a3a,#a82e12);color:#fff1e0}
+.big.heat.hold{transform:translateY(.2em);box-shadow:0 .1em 0 #0009,0 0 1.5em #ff7a3a;filter:brightness(1.2)}
+.big.add{background:linear-gradient(180deg,#52dcff,#0c8fc0);color:#06222f}
+.big.add:active{transform:translateY(.2em);box-shadow:0 .1em 0 #0009}
+.pause{position:absolute;inset:0;z-index:20;background:#000b;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.6em;font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:1.1em}
+.pause.on{display:flex}
+.result{position:absolute;inset:0;z-index:30;background:#150d07f2;display:none;flex-direction:column;align-items:center;justify-content:center;padding:1.2em;gap:.7em;overflow-y:auto}
+.result.on{display:flex}
+.result h2{margin:0;font-size:1.1em;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.pur{position:relative;width:12em;height:12em}
+.pur svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pur .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pur .c b{font-size:2.6em;font-family:Impact,"Arial Black",sans-serif;color:var(--blue);text-shadow:0 0 .4em #37d4ff99;line-height:1}
+.pur .c small{font-size:.7em;letter-spacing:.12em;text-transform:uppercase;color:#c9b27c;margin-top:.2em}
+.rres{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:.4em}
+.rres div{background:#0006;border:.1em solid #0009;border-radius:.6em;padding:.5em .7em;font-size:.74em;color:#c9b27c}
+.rres b{display:block;font-size:1.3em;color:#fff3cf;font-family:"Courier New",monospace}
+
+/* ---------- SETTINGS / LEGAL ---------- */
+#screen-settings{background:radial-gradient(120% 80% at 50% 0%,#4a3420 0%,#2a1c10 60%,#1d130b 100%)}
+.set-in{flex:1;overflow-y:auto;padding:0 0 1.4em;-webkit-overflow-scrolling:touch}
+.set-in::-webkit-scrollbar{width:0}
+.set-top{display:flex;align-items:center;gap:.6em;padding:2em .7em .3em}
+.set-top h2{margin:0;flex:1;text-align:right;font-size:1.1em;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:.4em;margin-top:.4em}
+.seg button{padding:.8em;border-radius:.6em;background:#00000066;border:.1em solid #0009;font-weight:800;font-size:.9em;color:#a58c60}
+.seg button.on{background:linear-gradient(180deg,#52dcff,#0c8fc0);color:#06222f}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:.8em;padding:.5em 0;font-size:.86em;font-weight:700;color:#e6d4a4}
+.sw{width:3.6em;height:2em;border-radius:1em;background:#0009;border:.1em solid #000;position:relative;flex:none}
+.sw i{position:absolute;top:.2em;left:.2em;width:1.45em;height:1.45em;border-radius:50%;background:#a58c60;transition:left .15s}
+.sw.on{background:#2f8a43}.sw.on i{left:1.85em;background:#fff}
+#vol,#mvol{flex:1;max-width:60%;accent-color:#37d4ff}
+.legal{font-size:.62em;line-height:1.4;color:#d8c597;opacity:.9;text-align:center;margin:.8em 1.2em 0}
+.set-in .legal{font-size:.72em}
+.author{font-size:.7em;margin:.5em .2em 0;text-align:center;color:#f8e7b0;text-shadow:0 .1em .2em #000;letter-spacing:.04em;font-weight:700}
+.author b{color:var(--blue)}
+.menu-btns .legal{margin:.2em .2em 0;font-size:.56em;color:#f4e3b2;text-shadow:0 .1em .2em #000}
+</style>
+</head>
+<body>
+
+<!-- ======= SVG ICONS (pure SVG, no emoji) ======= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9.5v.01M18 14.5v.01"/></symbol>
+<symbol id="i-crystal" viewBox="0 0 24 24"><path d="M12 2.5l7 5.5-2.4 13H7.4L5 8z"/><path d="M5 8h14M12 2.5L9.5 8l2.5 13.5L14.5 8z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.7-7 10-7 10 7 10 7-3.7 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></symbol>
+<symbol id="i-flask" viewBox="0 0 24 24"><path d="M9.5 3h5M10.5 3v6L4.8 19a1.8 1.8 0 0 0 1.6 2.6h11.2a1.8 1.8 0 0 0 1.6-2.6L13.5 9V3"/><path d="M7.5 15h9"/></symbol>
+<symbol id="i-pot" viewBox="0 0 24 24"><path d="M4 9h16v6a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z"/><path d="M2.5 9h19M8 5.5c0-1 1-1 1-2M13 5.5c0-1 1-1 1-2"/></symbol>
+<symbol id="i-candy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M7.7 10.2L2.5 7.5v9l5.2-2.7M16.3 10.2l5.2-2.7v9l-5.2-2.7"/><path d="M10 10.5a3 3 0 0 1 4 0"/></symbol>
+<symbol id="i-house" viewBox="0 0 24 24"><path d="M3 11l9-7.5 9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V6M6 12l6-6 6 6"/><path d="M5 21h14"/></symbol>
+<symbol id="i-market" viewBox="0 0 24 24"><path d="M3.5 9.5L5 4h14l1.5 5.5"/><path d="M3.5 9.5a2.8 2.8 0 0 0 5.5 0 2.8 2.8 0 0 0 6 0 2.8 2.8 0 0 0 5.5 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-4.5h4V20"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20v-3"/><path d="M8.5 7.5h7M8.5 11h5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2.5"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l12 7.5-12 7.5z" fill="currentColor"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/></symbol>
+<symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 2.5c1 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.3 1.3 1 2 2 2.5-.7-3 .3-5.5 1-8.5z"/></symbol>
+<symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M3.4 7l17.2 10M3.4 17L20.6 7"/><path d="M9.5 3.5L12 6l2.5-2.5M9.5 20.5L12 18l2.5 2.5"/></symbol>
+<symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v7"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="12" cy="12" r="1.3"/><path d="M12 10.7C12 8 14 7.5 15 8.5M13.3 12c2.7 0 3.2 2 2.2 3M12 13.3c0 2.7-2 3.2-3 2.2M10.7 12C8 12 7.5 10 8.5 9"/></symbol>
+<symbol id="i-mixer" viewBox="0 0 24 24"><path d="M5 12h14l-1.5 7a2 2 0 0 1-2 1.5h-7a2 2 0 0 1-2-1.5z"/><path d="M12 3v9M9.5 5.5l5 3M14.5 5.5l-5 3"/></symbol>
+<symbol id="i-grinder" viewBox="0 0 24 24"><path d="M5 4h14l-4.5 7v5.5h-5V11z"/><path d="M8 20h8M12 16.5V20"/></symbol>
+<symbol id="i-guard" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 21v-2.5a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5V21"/><path d="M10.5 17.5l1.5 1.5 2.2-2.8"/></symbol>
+<symbol id="i-truck" viewBox="0 0 24 24"><path d="M2.5 6.5h11v10h-11zM13.5 10h4.5l3 3.5v3h-7.5z"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
+<symbol id="i-vend" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2"/><rect x="7.5" y="5" width="9" height="8" rx="1"/><path d="M8 16.5h8"/></symbol>
+<symbol id="i-club" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 3v3M5 13h14M7 8.5c3 2 7 2 10 0M7 17.5c3-2 7-2 10 0M12 6v14"/></symbol>
+<symbol id="i-rest" viewBox="0 0 24 24"><path d="M3 17h18M4.5 17a7.5 7.5 0 0 1 15 0M12 8.5v-2M10.5 6.5h3M2.5 20.5h19"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+<symbol id="i-yard" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 20v-2a4.5 4.5 0 0 1 4.5-4.5h2a4.5 4.5 0 0 1 4.5 4.5v2M15 14h2a4 4 0 0 1 4 4v2"/></symbol>
+<symbol id="i-sugar" viewBox="0 0 24 24"><path d="M12 3l8 4v10l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10 10 4 20 4c0 10-5 16-13 16"/><path d="M5 19c3-5 6-8 11-11"/></symbol>
+<symbol id="i-atom" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/><path d="M9 14.5a3 3 0 0 0 2.5 2.5"/></symbol>
+<symbol id="i-acid" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 0 1 17 0z"/><path d="M12 12V3.7M6 12l3-7.2M18 12l-3-7.2"/><path d="M3.5 12.5h17"/></symbol>
+<symbol id="i-garage" viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M7 21v-7h10v7M7 17.5h10"/></symbol>
+<symbol id="i-rv" viewBox="0 0 24 24"><path d="M2.5 16V8.5h13l4 4V16z"/><path d="M5.5 11h3v2.5h-3zM15.5 12.5H19"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></symbol>
+<symbol id="i-wash" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13.5" r="4.5"/><path d="M7 6.5h2M12 10.5a3 3 0 0 1 3 3"/></symbol>
+<symbol id="i-ship" viewBox="0 0 24 24"><path d="M3 15h18l-2 5H5z"/><path d="M6 15V9h8v6M14 11h4v4M9 9V5h3v4"/></symbol>
+<symbol id="i-mount" viewBox="0 0 24 24"><path d="M2 20l7-12 4 6 3-4 6 10z"/><path d="M9 8l-2 3"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2c3 3 4 7 4 11l-4 3-4-3c0-4 1-8 4-11z"/><circle cx="12" cy="9" r="1.6"/><path d="M8 14l-3 4 4-1M16 14l3 4-4-1"/></symbol>
+<symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V10l6 3.5V10l6 3.5V6h4v15z"/><path d="M7 17h2M12 17h2M17 17h.01"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z"/></symbol>
+<symbol id="i-trend-up" viewBox="0 0 24 24"><path d="M4 16l6-6 4 4 6-7M15 7h5v5"/></symbol>
+<symbol id="i-trend-dn" viewBox="0 0 24 24"><path d="M4 8l6 6 4-4 6 7M15 17h5v-5"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24"><path d="M7 12V6.5a1.5 1.5 0 0 1 3 0V11M10 11V4.5a1.5 1.5 0 0 1 3 0V11M13 11V5.5a1.5 1.5 0 0 1 3 0V13M16 9.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L4.5 14a1.5 1.5 0 0 1 2.5-1.7L7 13"/></symbol>
+<symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/></symbol>
+</defs></svg>
+
+<div id="phone">
+
+  <!-- ================= MENU ================= -->
+  <div id="screen-menu" class="screen on">
+    <svg id="menu-bg" viewBox="0 0 360 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#162f46"/><stop offset=".3" stop-color="#4e6c7c"/><stop offset=".5" stop-color="#d9a45c"/><stop offset=".6" stop-color="#f4cf86"/><stop offset="1" stop-color="#f4cf86"/>
+        </linearGradient>
+        <radialGradient id="sunG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff1b8" stop-opacity=".95"/><stop offset=".4" stop-color="#ffd37a" stop-opacity=".5"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="hazeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4cf86" stop-opacity="0"/><stop offset=".6" stop-color="#f6d79a" stop-opacity=".75"/><stop offset="1" stop-color="#f4cf86" stop-opacity="0"/></linearGradient>
+        <linearGradient id="gndG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d49a4c"/><stop offset=".5" stop-color="#9a5f2c"/><stop offset="1" stop-color="#3d2110"/></linearGradient>
+        <linearGradient id="roadG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b5a4a"/><stop offset="1" stop-color="#241a14"/></linearGradient>
+        <linearGradient id="fadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></linearGradient>
+      </defs>
+      <rect width="360" height="640" fill="url(#sky)"/>
+      <g fill="#fff" opacity=".7"><circle cx="40" cy="40" r="1"/><circle cx="110" cy="70" r=".8"/><circle cx="200" cy="30" r="1.1"/><circle cx="300" cy="60" r=".9"/><circle cx="330" cy="120" r=".8"/><circle cx="70" cy="130" r=".7"/></g>
+      <circle cx="262" cy="330" r="110" fill="url(#sunG)"/>
+      <circle cx="262" cy="338" r="28" fill="#fff3c4"/>
+      <path d="M0 395 L0 368 L36 364 L50 346 L98 344 L112 362 L170 364 L184 382 L250 378 L262 356 L316 354 L330 370 L360 372 L360 395Z" fill="#b87a44" opacity=".7"/>
+      <path d="M0 400 L0 384 L60 380 L74 366 L130 366 L142 380 L210 384 L226 372 L284 372 L296 386 L360 384 L360 400Z" fill="#9a5f2c"/>
+      <rect y="372" width="360" height="40" fill="url(#hazeG)"/>
+      <path d="M0 398 H360 V640 H0Z" fill="url(#gndG)"/>
+      <path d="M172 398 H190 L352 640 H8Z" fill="url(#roadG)"/>
+      <g fill="#e8c46a" opacity=".85"><polygon points="180,402 182,402 183,412 179,412"/><polygon points="179,420 183,420 185,436 177,436"/><polygon points="177,446 184,446 188,472 174,472"/><polygon points="174,486 186,486 193,530 167,530"/><polygon points="168,552 192,552 204,616 156,616"/></g>
+      <g fill="#1b1209"><rect x="168" y="384" width="24" height="12" rx="2"/><rect x="170" y="386" width="5" height="4" fill="#e8b565"/><circle cx="173" cy="397" r="2.2"/><circle cx="187" cy="397" r="2.2"/></g>
+      <g stroke="#2f4a22" stroke-width="9" stroke-linecap="round" fill="none"><path d="M62 585 V500 M62 548 H40 V520 M62 530 H84 V506"/></g>
+      <g stroke="#3a5a2a" stroke-width="4" stroke-linecap="round" fill="none" opacity=".9"><path d="M58 580 V505 M58 548 H42 M58 530 H80"/></g>
+      <g stroke="#2f4a22" stroke-width="7" stroke-linecap="round" fill="none"><path d="M304 520 V462 M304 500 H288 V478 M304 488 H320 V470"/></g>
+      <g stroke="#2f4a22" stroke-width="5" stroke-linecap="round" fill="none" opacity=".8"><path d="M240 420 V398 M240 412 H232 M240 408 H248"/></g>
+      <path d="M0 440 H120 M240 432 H360 M0 470 H80" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+      <rect width="360" height="640" fill="url(#fadeG)"/>
+    </svg>
+    <div class="tw"><div><svg viewBox="0 0 40 40"><g fill="none" stroke="#7a5a30" stroke-width="1.6" stroke-linecap="round"><circle cx="20" cy="20" r="15"/><circle cx="20" cy="20" r="9"/><path d="M5 20c10-8 20 8 30 0M8 10c10 6 14 14 24 20M10 31c8-8 16-14 22-22M20 5c-6 10-6 20 0 30M20 5c6 10 6 20 0 30"/></g></svg></div></div>
+    <i class="dust" style="left:90%;top:52%;animation-delay:0s"></i><i class="dust" style="left:96%;top:60%;animation-delay:3s"></i><i class="dust" style="left:80%;top:68%;animation-delay:6s"></i><i class="dust" style="left:100%;top:46%;animation-delay:1.5s"></i>
+    <div class="menu-in">
+      <div>
+        <div class="title">
+          <div class="tl"><span class="el"><i>19</i><b>Ка</b><u>39.10</u></span><span class="rest">рамель</span></div>
+          <div class="tl"><span class="el"><i>18</i><b>Ха</b><u>39.95</u></span><span class="rest">йзенберга</span></div>
+        </div>
+        <div class="tag">Чистота <b>99.1%</b> &middot; без компромиссов</div>
+      </div>
+      <div class="menu-btns">
+        <button class="mb play" data-act="menuGo" data-to="lab"><svg class="ic"><use href="#i-play"/></svg>В игру</button>
+        <button class="mb blue" data-act="story"><svg class="ic"><use href="#i-book"/></svg>Предыстория</button>
+        <button class="mb sand" data-act="menuSet"><svg class="ic"><use href="#i-gear"/></svg>Настройки</button>
+        <button class="mb red" data-act="menuReset"><svg class="ic"><use href="#i-reset"/></svg>Сброс</button>
+        <div class="author">Автор: <b>Vseznaushchy</b> (Zhaukenov Sanzhar)</div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SETTINGS ================= -->
+  <div id="screen-settings" class="screen">
+    <div class="set-in">
+      <div class="set-top"><button class="btn dark sm" data-act="setBack"><svg class="ic"><use href="#i-back"/></svg>Назад</button><h2>Настройки</h2></div>
+      <div class="card"><h3><svg class="ic"><use href="#i-globe"/></svg>Язык</h3>
+        <div class="seg"><button data-act="lang" data-l="ru">Русский</button><button data-act="lang" data-l="en">English</button></div></div>
+      <div class="card"><h3><svg class="ic"><use href="#i-sound"/></svg>Звук</h3>
+        <div class="set-row"><span>Звуковые эффекты</span><button class="sw" id="sw-snd" data-act="sndToggle" aria-label="Sound"><i></i></button></div>
+        <div class="set-row"><span>Громкость эффектов</span><input type="range" id="vol" min="0" max="100" step="5"></div>
+        <div class="set-row"><span>Громкость музыки</span><input type="range" id="mvol" min="0" max="100" step="5"></div></div>
+      <div class="card"><h3>Сохранение</h3>
+        <div class="btn-row"><button class="btn sand" data-act="expSave">Экспорт</button><button class="btn dark" data-act="impSave">Импорт</button></div></div>
+      <div class="author">Автор: <b>Vseznaushchy</b> (Zhaukenov Sanzhar)</div>
+      <div class="legal">Игра — художественный вымысел. Все персонажи, организации, события и названия вымышлены и не являются правдой. Любые совпадения с реальными людьми, организациями или событиями случайны. Игра не призывает к противоправным действиям.<br>© Все права защищены.</div>
+    </div>
+  </div>
+
+  <!-- ================= GAME ================= -->
+  <div id="screen-game" class="screen">
+    <div id="hud">
+      <div class="hud-row">
+        <div class="chip cash"><svg class="ic"><use href="#i-cash"/></svg><span id="h-cash">$0</span></div>
+        <div class="chip cry"><svg class="ic"><use href="#i-crystal"/></svg><span id="h-cry">0</span></div>
+        <div class="hud-lab" id="h-lab"></div>
+      </div>
+      <div class="bars">
+        <div class="bar" id="bar-heat"><div class="bar-l"><svg class="ic"><use href="#i-eye"/></svg>ГОСТ-инспекция<span id="h-heat-t">0%</span></div><div class="bar-t"><i id="h-heat"></i></div></div>
+        <div class="bar" id="bar-cart"><div class="bar-l"><svg class="ic"><use href="#i-shield"/></svg>Картели<span id="h-cart-t">0%</span></div><div class="bar-t cart"><i id="h-cart"></i></div></div>
+      </div>
+    </div>
+    <div id="content"></div>
+    <div id="nav">
+      <button data-act="nav" data-to="lab"><svg class="ic"><use href="#i-flask"/></svg>Лаборатория</button>
+      <button data-act="nav" data-to="upg"><svg class="ic"><use href="#i-up"/></svg>Улучшения</button>
+      <button data-act="nav" data-to="market"><svg class="ic"><use href="#i-market"/></svg>Рынок</button>
+      <button data-act="nav" data-to="rec"><svg class="ic"><use href="#i-book"/></svg>Рецепты</button>
+      <button data-act="nav" data-to="menu"><svg class="ic"><use href="#i-menu"/></svg>Меню</button>
+    </div>
+  </div>
+
+  <!-- ================= BREW ================= -->
+  <div id="screen-brew" class="screen"></div>
+
+  <div id="modal"></div>
+  <div id="toasts"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   БАЗОВЫЕ ХЕЛПЕРЫ
+   ============================================================ */
+var SAVE_KEY='karamel_heisenberga_v1';
+function $(s,r){return (r||document).querySelector(s);}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function money(n){n=Math.floor(n);if(n>=1e9)return (n/1e9).toFixed(2)+' млрд';if(n>=1e6)return (n/1e6).toFixed(2)+' млн';return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,(LANG==='en'?',':' '));}
+function ic(n,c){return '<svg class="ic '+(c||'')+'" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-'+n+'"/></svg>';}
+function setT(id,t){t=tr(t);var e=document.getElementById(id);if(e&&e.textContent!==t)e.textContent=t;}
+function rnd(a,b){return a+Math.random()*(b-a);}
+
+/* ============================================================
+   НАСТРОЙКИ, ЯЗЫК (RU/EN) И ЗВУК
+   ============================================================ */
+var CFG_KEY='karamel_heisenberga_cfg';
+var cfg={lang:'ru',snd:true,vol:0.7,mvol:0.4};
+try{var _c=JSON.parse(localStorage.getItem(CFG_KEY)||'null');if(_c){if(_c.lang==='en'||_c.lang==='ru')cfg.lang=_c.lang;if(typeof _c.snd==='boolean')cfg.snd=_c.snd;if(typeof _c.vol==='number')cfg.vol=Math.max(0,Math.min(1,_c.vol));if(typeof _c.mvol==='number')cfg.mvol=Math.max(0,Math.min(1,_c.mvol));}}catch(e){}
+function saveCfg(){try{localStorage.setItem(CFG_KEY,JSON.stringify(cfg));}catch(e){}}
+var LANG=cfg.lang,sndOn=cfg.snd,vol=cfg.vol;
+var DICT={"Громкость эффектов":"Effects volume","Громкость музыки":"Music volume","Автор:":"Author:","<i>19</i><b>Ка</b><u>39.10</u>": "<i>20</i><b>Ca</b><u>40.08</u>", "<i>18</i><b>Ха</b><u>39.95</u>": "<i>2</i><b>He</b><u>4.003</u>", "<span class=\"rest\">рамель</span>": "<span class=\"rest\">ramel</span>", "<span class=\"rest\">йзенберга</span>": "<span class=\"rest\">isenberg</span>", "Карамель Хайзенберга": "Caramel Heisenberg", "Чистота": "Purity", "без компромиссов": "no compromises", "В игру": "Play", "Настройки": "Settings", "Сброс": "Reset", "Назад": "Back", "Язык": "Language", "Звуковые эффекты": "Sound effects", "Звук": "Sound", "Громкость": "Volume", "Игра — художественный вымысел. Все персонажи, организации, события и названия вымышлены и не являются правдой. Любые совпадения с реальными людьми, организациями или событиями случайны. Игра не призывает к противоправным действиям.": "This game is a work of fiction. All characters, organizations, events and names are made up and are not true. Any resemblance to real people, organizations or events is purely coincidental. The game does not encourage any illegal activity.", "© Все права защищены.": "© All rights reserved.", "ГОСТ-инспекция": "GOST Inspection", "Картели": "Cartels", "Лаборатория": "Laboratory", "Улучшения": "Upgrades", "Рынок": "Market", "Рецепты": "Recipes", "Меню": "Menu", " млрд": "B", " млн": "M", "Ок": "OK", "Ур.": "Lv.", "Сахарная база": "Sugar base", "Сахар": "Sugar", "Натуральные ароматизаторы": "Natural flavorings", "Ароматизатор": "Flavoring", "Секретные катализаторы вкуса": "Secret flavor catalysts", "Катализатор": "Catalyst", "Пищевые красители": "Food dyes", "Краситель": "Dye", "Кислотные добавки": "Acid additives", "Кислота": "Acid", "Уличный Дропс": "Street Drops", "Базовый леденец. Дёшево варить, быстро продавать.": "Basic lollipop. Cheap to cook, quick to sell.", "Голубой Мятыш": "Blue Minty", "Легендарная классика. Высокая чистая прибыль.": "Legendary classic. High net profit.", "Чили-Коричный Взрыв": "Chili-Cinnamon Blast", "Острый вкус. Молодёжь сметает с прилавков.": "Spicy kick. Youngsters sweep it off the shelves.", "Кислотный Физз": "Acid Fizz", "Экстремальная кислинка. Дорогая ингредиентная база.": "Extreme sourness. Expensive ingredient base.", "Энерго-Карамель": "Energy Caramel", "С кофеином и таурином. Не спит никто.": "With caffeine and taurine. Nobody sleeps.", "Ночной Кристалл": "Night Crystal", "Светится в темноте. Клубы в восторге.": "Glows in the dark. Clubs love it.", "Золотой Стандарт": "Gold Standard", "Элитная карамель с пищевым золотом.": "Elite caramel with edible gold.", "Кристалл Хайзенберга": "Heisenberg Crystal", "Венценосный рецепт. Чистота": "The crowning recipe. Purity", "легенда.": "a legend.", "Кухня в старом доме": "Old House Kitchen", "Базовые кастрюли, медленная варка, сильный запах.": "Basic pots, slow cooking, strong smell.", "1 котёл": "1 pot", "2 котла": "2 pots", "3 котла": "3 pots", "4 котла": "4 pots", "Запах": "Smell", "Варка обычная": "Normal cooking", "Варка": "Cooking", "Заброшенный гараж на окраине": "Abandoned Outskirts Garage", "Можно ставить 2 котла. Запах всё ещё выдаёт вас.": "You can place 2 pots. The smell still gives you away.", "Старый RV-фургончик в степи": "Old Steppe RV Camper", "Мобильность: облавы бьют слабее на 35%.": "Mobility: raids hit 35% weaker.", "Облавы": "Raids", "Подвал под городской прачечной": "City Laundromat Basement", "Промышленное охлаждение и скрытый впуск. Три котла.": "Industrial cooling and a hidden intake. Three pots.", "Охлаждение": "Cooling", "Сверхсекретный подземный завод": "Secret Underground Plant", "Полная автоматизация и максимальный объём. Четыре котла.": "Full automation and maximum volume. Four pots.", "Автоварка": "Auto-brew", "Цифровые термометры": "Digital Thermometers", "Шире зелёная зона, выше чистота партий.": "Wider green zone, higher batch purity.", "чистота": "purity", "Зона": "Zone", "Вытяжные фильтры": "Exhaust Filters", "Меньше запаха, меньше внимания инспекции.": "Less smell, less attention from the inspection.", "Запах варки": "Cooking smell", "Промышленные миксеры": "Industrial Mixers", "Варка идёт быстрее.": "Cooking goes faster.", "Время варки": "Cooking time", "Дробилки и фасовочные станки": "Crushers and Packing Machines", "Больше карамели в каждом котле.": "More caramel in every pot.", "Объём партии": "Batch size", "Охрана": "Security", "Защита районов от кондитерских картелей.": "Protects districts from candy cartels.", "Давление картелей": "Cartel pressure", "Логистика": "Logistics", "Открывает и расширяет экспортный канал.": "Opens and expands the export channel.", "Экспорт: до": "Export: up to", "шт.": "pcs", "Идеальный сироп": "Perfect Syrup", "к итоговой чистоте каждой партии.": "to the final purity of every batch.", "Подпольные связи": "Underground Connections", "Взятки и переговоры дешевле на": "Bribes and negotiations are cheaper by", "Двойное дно": "False Bottom", "Продажи привлекают на": "Sales attract", "меньше внимания.": "less attention.", "Скрытая вентиляция": "Hidden Ventilation", "Внимание инспекции спадает на": "Inspection attention drops", "быстрее.": "faster.", "Внимание инспекции": "Inspection attention", "Внимание": "Attention", "Фирменная обёртка": "Branded Wrapper", "к цене всей карамели.": "to the price of all caramel.", "Дипломатия сладостей": "Candy Diplomacy", "Давление картелей растёт на": "Cartel pressure grows", "медленнее.": "slower.", "Перфекционизм": "Perfectionism", "Зелёная зона температуры шире на": "The green temperature zone is wider by", "Склад-призрак": "Ghost Warehouse", "Склад": "Stock", "При облаве теряется на": "In a raid you lose", "меньше товара.": "less goods.", "Дворовые перекупщики": "Street Resellers", "Низкая цена, нулевой риск.": "Low price, zero risk.", "Ночные клубы и тусовки": "Nightclubs and Parties", "Яркие рецепты улетают с наценкой +35%.": "Bright recipes fly off the shelves with a +35% markup.", "Сеть подпольных автоматов": "Underground Vending Network", "Пассивный доход: автоматы сами продают ваши запасы.": "Passive income: machines sell your stock by themselves.", "Элитные закрытые рестораны": "Elite Private Restaurants", "Берут только карамель чистотой от": "Only take caramel with purity from", "Международный экспорт": "International Export", "Огромные партии. Нужна прокачанная логистика.": "Huge batches. Upgraded logistics required.", "Как играть": "How to play", "Выберите рецепт и число котлов, нажмите «Начать варку»": "Choose a recipe and the number of pots, press “Start brewing”", "Удерживайте «Греть», чтобы маркер температуры оставался в зелёной зоне.": "Hold “Heat” to keep the temperature marker in the green zone.", "Когда сожмётся кольцо, жмите «Высыпать» — это добавление ингредиента.": "When the ring shrinks, press “Add” — that adds the ingredient.", "Высыпать": "Add", "Продавайте карамель на Рынке и следите за ГОСТ-инспекцией и картелями.": "Sell caramel on the Market and watch out for the GOST inspection and cartels.", "Котлов:": "Pots:", "шт. на котёл": "pcs per pot", "Базовая цена": "Base price", "Котлов в варку (макс.": "Pots to brew (max.", "Партия:": "Batch:", "Выручка": "Revenue", "Вы лежите на дне": "You are lying low", "Вы лежите на дне. Подождите.": "You are lying low. Please wait.", "Начать варку": "Start brewing", "Не хватает ингредиентов": "Not enough ingredients", "Закупите недостающее на вкладке «Рынок»": "Buy the missing items on the “Market” tab", "Угрозы": "Threats", "Внимание растёт от запаха варки и продаж. При 100% — облава: штраф и потеря части партии.": "Attention grows from brewing smell and sales. At 100% — a raid: a fine and loss of part of the batch.", "Залечь на дно": "Lie low", "Подкуп": "Bribe", "Кондитерские картели": "Candy Cartels", "Давление растёт со временем и объёмом продаж. При 100% картель отожмёт район и часть денег. Охрана: уровень": "Pressure grows over time and with sales volume. At 100% a cartel will squeeze a district and part of your cash. Security: level", "Переговоры": "Negotiate", "Автоматизация завода": "Plant Automation", "Выбранный рецепт варится сам на полную мощность. Чистота автоварки ограничена, зато вы свободны.": "The selected recipe cooks itself at full power. Auto-brew purity is limited, but you are free.", "Выбран": "Selected", "Выключить автоварку": "Turn off auto-brew", "Включить автоварку": "Turn on auto-brew", "Склад пуст. Сварите первую партию.": "The stock is empty. Cook your first batch.", "К продаже": "To sale", "Нужна лаборатория ур.": "Requires lab level ", "Нужна логистика ур.": "Requires logistics level ", "Закупка": "Buy", "Сбыт": "Sell", "Ингредиенты": "Ingredients", "На складе:": "In stock:", "Макс.": "Max.", "Цены на ингредиенты колеблются. Закупайтесь, когда они ниже обычного.": "Ingredient prices fluctuate. Buy when they are below normal.", "Каналы сбыта": "Sales channels", "Открыть": "Unlock", "Открыт": "Unlocked", "Автоматов:": "Machines:", "1 шт. в 5 с на автомат": "1 pc every 5 s per machine", "Захвачен картелем:": "Seized by a cartel:", "Максимум": "Maximum", "Автомат": "Machine", "Автоматы продают лучшие запасы со склада сами.": "Machines sell the best stock from the warehouse by themselves.", "Спрос:": "Demand:", "чистота от": "purity from", "Нет товара на складе.": "No goods in stock.", "Продать": "Sell", "Продать всё возможное": "Sell everything possible", "Книга рецептов": "Recipe book", "Выбран для варки": "Selected for brewing", "Выбрать для варки": "Select for brewing", "Открыть за": "Unlock for", "Не хватает кристаллов.": "Not enough crystals.", "Не хватает кристаллов": "Not enough crystals", "Локации": "Locations", "Здесь": "Here", "Куплено": "Owned", "Переехать:": "Move in:", "кр.": "cr.", "Сначала откройте предыдущую локацию.": "Unlock the previous location first.", "Оборудование": "Equipment", "Сейчас:": "Now:", "нет эффекта": "no effect", "Улучшить": "Upgrade", "Уникальные технологии": "Unique technologies", "Изучено": "Researched", "Изучить за": "Research for", "Лежим на дне:": "Lying low:", "Канал захвачен картелем": "The channel is seized by a cartel", "Нужна чистота от": "Need purity from", "Спрос исчерпан — подождите": "Demand exhausted — please wait", "Облава ГОСТ-инспекции": "GOST Inspection Raid", "Инспекторы нагрянули в лабораторию. Штраф:": "Inspectors raided the lab. Fine:", "Конфисковано карамели:": "Caramel confiscated:", "Внимание сброшено до": "Attention reset to", "Принять к сведению": "Noted", "Картель отжал район": "The cartel took over a district", "Кондитерский картель захватил канал": "A candy cartel seized the channel", "» на <b>": "» for <b>", "и вытряс из вас": "and extorted from you", "Усильте охрану или ведите переговоры.": "Strengthen security or negotiate.", "Понял": "Got it", "Инспектор у двери": "Inspector at the door", "Инспектор ГОСТ принюхивается у входа и просит предъявить «документы на кондитерскую»": "A GOST inspector sniffs around the entrance and asks to see the “candy shop papers”", "Откупиться": "Pay off", "Конверт ушёл по назначению. Внимание инспекции": "The envelope reached its destination. Inspection attention", "Сменить локацию": "Change location", "Вы свернули производство и затаились на": "You shut down production and laid low for", "секунд": "seconds", "Замаскировать под пекарню": "Disguise it as a bakery", "Булочки сработали! Внимание": "The buns worked! Attention", "Инспектор не поверил в «пекарню без муки». Внимание": "The inspector did not believe in a “bakery without flour”. Attention", "Жалоба соседей на запах": "Neighbors complain about the smell", "Кто-то написал анонимный донос: из вашего здания пахнет жжёным сахаром.": "Someone sent an anonymous tip: your building smells of burnt sugar.", "Заплатить за «ремонт вентиляции»": "Pay for “ventilation repairs”", "Заплатить": "Pay", "Соседи довольны, донос забрали. Внимание": "The neighbors are happy, the tip was withdrawn. Attention", "Угостить соседей": "Treat the neighbors", "шт. товара)": "pcs of goods)", "Мало товара": "Not enough goods", "Бесплатные леденцы сделали из соседей союзников. Внимание": "Free lollipops turned the neighbors into allies. Attention", "Проигнорировать": "Ignore", "Обошлось. Донос затерялся в бумагах.": "It blew over. The tip got lost in the paperwork.", "Донос дошёл до инспекции. Внимание": "The tip reached the inspection. Attention", "Налоговый аудит «кондитерской»": "Tax audit of the “candy shop”", "Проверяющий хочет увидеть бухгалтерию вашей несуществующей фабрики конфет.": "The auditor wants to see the books of your non-existent candy factory.", "Липовая накладная": "Fake invoice", "Бумаги выглядят убедительно. Внимание": "The papers look convincing. Attention", "Дать на лапу за «чистую репутацию»": "Grease palms for a “clean reputation”", "Ваше имя теперь в «белом списке». Внимание": "Your name is now on the “white list”. Attention", "кристалла.": "crystals.", "Сбежать через чёрный ход": "Flee through the back door", "Вы ушли огородами и залегли на": "You slipped away through the gardens and lay low for", "Картель предлагает «защиту»": "The cartel offers “protection”", "Двое в одинаковых куртках предлагают «крышу» за скромную плату.": "Two guys in matching jackets offer a “roof” for a modest fee.", "Договорились. Давление картелей": "Deal. Cartel pressure", "Отказаться": "Refuse", "Они ушли ни с чем. Пока.": "They left empty-handed. For now.", "Они запомнили ваше лицо. Давление": "They remembered your face. Pressure", "Позвать охрану": "Call security", "Нужна охрана": "Security required", "Охрана вежливо объяснила гостям выход. Давление": "Security politely showed the guests the exit. Pressure", "Свидетель видел фургон": "A witness saw the van", "Прохожий заметил, как вы таскаете мешки с сахаром среди ночи, и запоминает номера.": "A passer-by noticed you hauling sacks of sugar at night and is memorizing the plates.", "Вы перегнали технику на новое место. Внимание": "You moved the equipment to a new place. Attention", "Откупиться от свидетеля": "Pay off the witness", "Свидетель вдруг всё забыл. Внимание": "The witness suddenly forgot everything. Attention", "Выдать за доставку выпечки": "Pass it off as a bakery delivery", "Фургон «Свежий хлеб» — идеальное прикрытие. Внимание": "A “Fresh Bread” van is the perfect cover. Attention", "Свидетель заметил, что хлеб пахнет мятой. Внимание": "The witness noticed the bread smells of mint. Attention", "VIP-заказ от клуба": "VIP order from the club", "Владелец клуба хочет закупить 10 шт. лучшей карамели по повышенной цене.": "The club owner wants to buy 10 pcs of your best caramel at a higher price.", "Принять заказ": "Accept the order", "Продано": "Sold", "шт. за": "pcs for", "Поторговаться": "Haggle", "или срыв)": "or it falls through)", "Клиент сдался! Продано": "The client gave in! Sold", "Клиент ушёл к конкурентам. Сделка сорвана.": "The client went to competitors. The deal fell through.", "Вы не любите рисковать. Заказ ушёл в другие руки.": "You do not like taking risks. The order went elsewhere.", "Автоварка ждёт ингредиенты.": "Auto-brew is waiting for ingredients.", "Автоварка:": "Auto-brew:", "Не хватает:": "Missing:", "Прервать": "Abort", "Температура сиропа": "Syrup temperature", "Температура": "Temperature", "Следующее": "Next", "Греть (держать)": "Heat (hold)", "Пауза": "Pause", "Продолжить": "Resume", "СЛИШКОМ РАНО": "TOO EARLY", "РАНО": "EARLY", "ИДЕАЛЬНО": "PERFECT", "ХОРОШО": "GOOD", "СЛАБО": "WEAK", "ПРОПУЩЕНО": "MISSED", "Добавь сейчас": "Add now", "Готово": "Done", "Держи температуру до конца": "Keep the temperature until the end", " через ": " in ", "Легенда": "Legend", "Безупречно": "Flawless", "Элита": "Elite", "Отлично": "Excellent", "Хорошо": "Good", "Кустарщина": "Amateur", "Партия готова": "Batch ready", "Карамели": "Caramel", "Ценность": "Value", "Кристаллов получено:": "Crystals gained:", "Забрать": "Collect", "Варить ещё": "Brew again", "Сбросить прогресс?": "Reset progress?", "Все деньги, оборудование, рецепты, репутация и риски будут удалены безвозвратно.": "All money, equipment, recipes, reputation and risks will be permanently deleted.", "Да, сбросить всё": "Yes, reset everything", "Прогресс сброшен.": "Progress reset.", "Отмена": "Cancel", "Вы залегли на дно на": "You laid low for", "Не хватает наличных": "Not enough cash", "Инспектор доволен. Внимание": "The inspector is satisfied. Attention", "Нечего продать: нет спроса или чистоты": "Nothing to sell: no demand or insufficient purity", "Канал открыт:": "Channel unlocked:", "Рецепт выбран для варки.": "Recipe selected for brewing.", "Рецепт открыт:": "Recipe unlocked:", "Не хватает средств": "Not enough funds", "Новая локация:": "New location:", "Технология изучена:": "Technology researched:", "уровень": "level", "Прервать варку?": "Abort brewing?", "Ингредиенты уже потрачены и будут потеряны.": "The ingredients are already spent and will be lost.", "Прервать и потерять партию": "Abort and lose the batch", "Партия потеряна.": "The batch is lost.", "Продолжить варить": "Keep brewing", "Пока вас не было, автоматы принесли": "While you were away, the machines earned"};
+var DRX=new RegExp(Object.keys(DICT).sort(function(a,b){return b.length-a.length;}).map(function(k){return k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|'),'g');
+function tr(s){
+  if(LANG!=='en'||typeof s!=='string'||!/[А-Яа-яЁё]/.test(s))return s;
+  return s.replace(DRX,function(m){return DICT[m];}).replace(/(\d+)(<\/b>)? с(?![А-Яа-яЁё])/g,'$1$2 s');
+}
+var STATIC=['#screen-menu .menu-in','#screen-settings','#hud','#nav'],ORIG={};
+function applyLang(){
+  document.documentElement.lang=LANG;
+  document.title=tr('Карамель Хайзенберга');
+  STATIC.forEach(function(sel){var el=$(sel);if(!el)return;if(ORIG[sel]===undefined)ORIG[sel]=el.innerHTML;el.innerHTML=tr(ORIG[sel]);});
+  updateSettingsUI();updateHud();updateNav();
+}
+function setLang(l){if(l!==LANG&&(l==='ru'||l==='en')){LANG=l;cfg.lang=l;saveCfg();applyLang();refresh();}}
+function updateSettingsUI(){
+  var bs=document.querySelectorAll('#screen-settings [data-act="lang"]');
+  for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].dataset.l===LANG);
+  var sw=document.getElementById('sw-snd');if(sw)sw.classList.toggle('on',sndOn);
+  var v=document.getElementById('vol');if(v)v.value=Math.round(vol*100);
+  var mv=document.getElementById('mvol');if(mv)mv.value=Math.round(cfg.mvol*100);
+}
+function toggleSnd(){sndOn=!sndOn;cfg.snd=sndOn;saveCfg();audioInit();setMaster();if(!sndOn)sndHeat(false);updateSettingsUI();sfx('tap');}
+
+/* ---- звук: Web Audio, без внешних файлов ---- */
+var AC=null,master=null,nbuf=null,heatSrc=null,heatG=null;
+var MUS=null,musTried=false;
+function musicStart(){
+  try{
+    if(!MUS){MUS=new Audio('music.mp3');MUS.loop=true;MUS.preload='auto';}
+    MUS.volume=cfg.mvol;
+    if(cfg.mvol>0&&MUS.paused){var p=MUS.play();if(p&&p.catch)p.catch(function(){});}
+  }catch(e){}
+}
+function musicVol(){
+  if(!MUS){musicStart();return;}
+  MUS.volume=cfg.mvol;
+  if(cfg.mvol<=0)MUS.pause();else if(MUS.paused)musicStart();
+}
+document.addEventListener('visibilitychange',function(){
+  if(!MUS)return;
+  if(document.hidden)MUS.pause();else if(cfg.mvol>0)musicStart();
+});
+function audioInit(){
+  musicStart();
+  try{
+    if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=new C();master=AC.createGain();master.gain.value=sndOn?vol:0;master.connect(AC.destination);}
+    if(AC.state==='suspended')AC.resume();
+  }catch(e){AC=null;}
+}
+function setMaster(){if(master)master.gain.value=sndOn?vol:0;}
+function noiseBuf(){
+  if(!nbuf){nbuf=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);var a=nbuf.getChannelData(0);for(var i=0;i<a.length;i++)a[i]=Math.random()*2-1;}
+  return nbuf;
+}
+function tone(f,d,ty,v,f2,t0){
+  var t=AC.currentTime+(t0||0),o=AC.createOscillator(),g=AC.createGain();
+  o.type=ty||'sine';o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v||0.2,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  o.connect(g);g.connect(master);o.start(t);o.stop(t+d+0.03);
+}
+function hiss(d,v,fq,t0){
+  var t=AC.currentTime+(t0||0),s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();
+  s.buffer=noiseBuf();fl.type='bandpass';fl.frequency.value=fq||1000;fl.Q.value=0.8;
+  g.gain.setValueAtTime(v||0.2,t);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  s.connect(fl);fl.connect(g);g.connect(master);s.start(t);s.stop(t+d+0.03);
+}
+var SFX={
+  tap:function(){tone(540,0.05,'triangle',0.1,360);},
+  coin:function(){tone(988,0.07,'square',0.06);tone(1319,0.14,'square',0.06,0,0.06);},
+  cash:function(){hiss(0.05,0.08,4000);tone(1175,0.09,'triangle',0.16);tone(1568,0.12,'triangle',0.16,0,0.08);tone(2093,0.3,'sine',0.12,0,0.16);},
+  up:function(){[440,554,659,880].forEach(function(f,i){tone(f,0.16,'triangle',0.14,0,i*0.07);});},
+  err:function(){tone(190,0.2,'sawtooth',0.1,110);},
+  low:function(){tone(320,0.35,'sine',0.14,140);},
+  reset:function(){tone(500,0.3,'triangle',0.14,120);hiss(0.25,0.08,500);},
+  start:function(){hiss(0.5,0.14,600);tone(110,0.5,'sawtooth',0.05,240);},
+  cue:function(){tone(880,0.05,'sine',0.06);},
+  perf:function(){tone(784,0.1,'sine',0.22);tone(1175,0.24,'sine',0.22,0,0.08);tone(1568,0.3,'sine',0.1,0,0.14);},
+  good:function(){tone(660,0.14,'sine',0.2);tone(880,0.14,'sine',0.14,0,0.07);},
+  weak:function(){tone(380,0.16,'triangle',0.18,300);},
+  miss:function(){tone(200,0.2,'sawtooth',0.1,120);hiss(0.1,0.08,300);},
+  win:function(){[523,659,784].forEach(function(f,i){tone(f,0.2,'triangle',0.16,0,i*0.1);});},
+  win2:function(){[523,659,784,1047,1319].forEach(function(f,i){tone(f,0.28,'triangle',0.16,0,i*0.09);});tone(2093,0.5,'sine',0.08,0,0.45);},
+  raid:function(){for(var i=0;i<4;i++)tone(i%2?700:950,0.24,'sawtooth',0.09,0,i*0.25);},
+  hit:function(){tone(90,0.45,'sine',0.35,40);hiss(0.2,0.2,200);},
+  ping:function(){tone(880,0.1,'sine',0.18);tone(1320,0.22,'sine',0.16,0,0.1);}
+};
+function sfx(n){if(!sndOn)return;audioInit();if(!AC)return;try{if(SFX[n])SFX[n]();}catch(e){}}
+function sndHeat(on){
+  try{
+    if(on&&(!AC||!sndOn))on=false;
+    if(on&&!heatSrc){
+      heatSrc=AC.createBufferSource();heatSrc.buffer=noiseBuf();heatSrc.loop=true;
+      var f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=0.6;
+      heatG=AC.createGain();heatG.gain.value=0;heatSrc.connect(f);f.connect(heatG);heatG.connect(master);heatSrc.start();
+      heatG.gain.setTargetAtTime(0.09,AC.currentTime,0.05);
+    }else if(!on&&heatSrc){
+      var s0=heatSrc,g0=heatG;heatSrc=null;heatG=null;
+      g0.gain.setTargetAtTime(0,AC.currentTime,0.05);
+      setTimeout(function(){try{s0.stop();}catch(e){}},250);
+    }
+  }catch(e){}
+}
+
+
+/* ============================================================
+   ДАННЫЕ
+   ============================================================ */
+var ING=[
+ {id:'sugar',name:'Сахарная база',short:'Сахар',price:2,icon:'sugar'},
+ {id:'flavor',name:'Натуральные ароматизаторы',short:'Ароматизатор',price:4,icon:'leaf'},
+ {id:'catalyst',name:'Секретные катализаторы вкуса',short:'Катализатор',price:8,icon:'atom'},
+ {id:'dye',name:'Пищевые красители',short:'Краситель',price:3,icon:'drop'},
+ {id:'acid',name:'Кислотные добавки',short:'Кислота',price:5,icon:'acid'},
+  {id:'mint',name:'Мятный экстракт',short:'Мята',price:6,icon:'leaf'},
+  {id:'honey',name:'Горный мёд',short:'Мёд',price:9,icon:'sugar'},
+  {id:'spice',name:'Восточные специи',short:'Специи',price:11,icon:'fire'},
+  {id:'frost',name:'Ледяной ментол',short:'Ментол',price:13,icon:'snow'},
+  {id:'reagent',name:'Особый реагент',short:'Реагент',price:25,icon:'flask'},
+  {id:'gold',name:'Пищевое золото',short:'Золото',price:42,icon:'cash'}
+];
+function ingById(id){for(var i=0;i<ING.length;i++)if(ING[i].id===id)return ING[i];return null;}
+
+var REC=[
+ {id:0,name:'Уличный Дропс',desc:'Базовый леденец. Дёшево варить, быстро продавать.',cost:{sugar:4,dye:1},price:5,unlock:0,labReq:1,smell:2,cols:['#ffd25a','#e09a1a'],deco:'plain',bright:false},
+ {id:1,name:'Голубой Мятыш',desc:'Легендарная классика. Высокая чистая прибыль.',cost:{sugar:4,flavor:3,dye:2},price:14,unlock:5,labReq:1,smell:3,cols:['#8aeaff','#139ce0'],deco:'facet',bright:true},
+ {id:2,name:'Чили-Коричный Взрыв',desc:'Острый вкус. Молодёжь сметает с прилавков.',cost:{sugar:4,flavor:4,catalyst:2,dye:1},price:22,unlock:12,labReq:1,smell:3.5,cols:['#ff7a44','#a8200f'],deco:'swirl',bright:true},
+ {id:3,name:'Кислотный Физз',desc:'Экстремальная кислинка. Дорогая ингредиентная база.',cost:{sugar:4,flavor:2,catalyst:2,dye:2,acid:4},price:34,unlock:25,labReq:2,smell:4,cols:['#d9ff44','#5aa400'],deco:'speck',bright:true},
+ {id:4,name:'Энерго-Карамель',desc:'С кофеином и таурином. Не спит никто.',cost:{sugar:5,flavor:3,catalyst:4,dye:2,acid:2},price:52,unlock:45,labReq:2,smell:4.5,cols:['#b98aff','#ffd23a'],deco:'bolt',bright:true},
+ {id:5,name:'Ночной Кристалл',desc:'Светится в темноте. Клубы в восторге.',cost:{sugar:5,flavor:3,catalyst:5,dye:4,acid:3},price:80,unlock:80,labReq:3,smell:5,cols:['#58ffd8','#0a7a7a'],deco:'glow',bright:true},
+ {id:6,name:'Золотой Стандарт',desc:'Элитная карамель с пищевым золотом.',cost:{sugar:6,flavor:4,catalyst:7,dye:4,acid:4},price:130,unlock:140,labReq:4,smell:5.5,cols:['#ffe88a','#c08a10'],deco:'gold',bright:false},
+ {id:7,name:'Кристалл Хайзенберга 99.1%',desc:'Венценосный рецепт. Чистота 99.1% — легенда.',cost:{sugar:8,flavor:6,catalyst:10,dye:6,acid:6},price:240,unlock:300,labReq:5,smell:6.5,cols:['#a8f4ff','#0a7fd0'],deco:'crown',bright:false},
+ {id:8,name:'Ледяная Мята',desc:'Холодок до самых пяток. Свежесть, за которую платят.',cost:{sugar:5,flavor:3,mint:3,frost:2,dye:2},price:60,unlock:55,labReq:2,smell:4.2,cols:['#c8fff4','#2aa8b8'],deco:'snow',bright:true},
+ {id:9,name:'Медовый Янтарь',desc:'Тягучая карамель с горным мёдом. Любимица ресторанов.',cost:{sugar:5,honey:4,flavor:3,catalyst:3,dye:2},price:100,unlock:100,labReq:3,smell:4.8,cols:['#ffd36a','#b8620a'],deco:'honey',bright:false},
+ {id:10,name:'Огненный Султан',desc:'Восточные специи и жар. Не для слабых.',cost:{sugar:6,spice:4,catalyst:5,dye:3,acid:3},price:165,unlock:170,labReq:4,smell:5.4,cols:['#ff9a3a','#a81408'],deco:'flame',bright:true},
+ {id:11,name:'Северное Сияние',desc:'Переливается как небо над тундрой. Редкая роскошь.',cost:{sugar:7,frost:4,mint:3,catalyst:6,reagent:3,dye:4},price:280,unlock:360,labReq:4,smell:5.8,cols:['#7affc8','#6a3ad8'],deco:'aurora',bright:true},
+ {id:12,name:'Королевское Золото',desc:'Пищевое золото и реагент. Для самых богатых клиентов.',cost:{sugar:8,honey:5,gold:3,catalyst:8,reagent:4,acid:4},price:420,unlock:560,labReq:5,smell:6.2,cols:['#fff0a0','#b07a08'],deco:'gold',bright:false},
+ {id:13,name:'Карамель Хайзенберга 100%',desc:'Абсолютная чистота. Легенда легенд: только идеальная варка даёт 100%.',cost:{sugar:12,flavor:8,catalyst:12,dye:8,acid:8,reagent:8,gold:4,frost:4},price:900,unlock:1000,labReq:5,smell:8,cols:['#e8ffff','#0a60c8'],deco:'heis',bright:false,pure:true}
+];
+
+var LABS=[
+ {id:1,name:'Кухня в старом доме',icon:'house',desc:'Базовые кастрюли, медленная варка, сильный запах.',cost:0,cry:0,pots:1,smell:1.6,raid:0,cool:0,speed:1.0,auto:false,fx:['1 котёл','Запах x1.6','Варка обычная']},
+ {id:2,name:'Заброшенный гараж на окраине',icon:'garage',desc:'Можно ставить 2 котла. Запах всё ещё выдаёт вас.',cost:1500,cry:0,pots:2,smell:1.3,raid:0,cool:0.1,speed:0.95,auto:false,fx:['2 котла','Запах x1.3','Варка -5%']},
+ {id:3,name:'Старый RV-фургончик в степи',icon:'rv',desc:'Мобильность: облавы бьют слабее на 35%.',cost:7000,cry:0,pots:2,smell:1.0,raid:0.35,cool:0.2,speed:0.9,auto:false,fx:['2 котла','Облавы -35%','Запах x1.0']},
+ {id:4,name:'Подвал под городской прачечной',icon:'wash',desc:'Промышленное охлаждение и скрытый впуск. Три котла.',cost:32000,cry:15,pots:3,smell:0.7,raid:0.45,cool:0.6,speed:0.85,auto:false,fx:['3 котла','Охлаждение +60%','Облавы -45%']},
+ {id:5,name:'Сверхсекретный подземный завод',icon:'factory',desc:'Полная автоматизация и максимальный объём. Четыре котла.',cost:140000,cry:60,pots:4,smell:0.45,raid:0.6,cool:1.0,speed:0.75,auto:true,fx:['4 котла','Автоварка','Облавы -60%']},
+ {id:6,name:'Плавучая платформа в океане',icon:'ship',desc:'Нейтральные воды: инспекторам сюда долго добираться. Пять котлов.',cost:420000,cry:120,pots:5,smell:0.36,raid:0.68,cool:1.2,speed:0.7,auto:true,fx:['5 котлов','Облавы -68%','Запах x0.36']},
+ {id:7,name:'Горный бункер',icon:'mount',desc:'Скрытый вход, толстые стены, ледяной воздух. Шесть котлов.',cost:1400000,cry:260,pots:6,smell:0.26,raid:0.78,cool:1.5,speed:0.64,auto:true,fx:['6 котлов','Облавы -78%','Охлаждение +150%']},
+ {id:8,name:'Орбитальная станция «Карамель-1»',icon:'rocket',desc:'Здесь нет ни инспекции, ни картелей. Только сахар и звёзды. Восемь котлов.',cost:5500000,cry:650,pots:8,smell:0.14,raid:0.9,cool:2.0,speed:0.55,auto:true,fx:['8 котлов','Облавы -90%','Варка -45%']}
+];
+
+var EQUIP=[
+ {id:'thermo',name:'Цифровые термометры',desc:'Шире зелёная зона, выше чистота партий.',icon:'thermo',base:300,mult:1.9,eff:function(l){return 'Зона +'+(3*l)+'%, чистота +'+(2*l)+'%';}},
+ {id:'filter',name:'Вытяжные фильтры',desc:'Меньше запаха, меньше внимания инспекции.',icon:'filter',base:450,mult:2.0,eff:function(l){return 'Запах варки -'+(12*l)+'%';}},
+ {id:'mixer',name:'Промышленные миксеры',desc:'Варка идёт быстрее.',icon:'mixer',base:600,mult:2.0,eff:function(l){return 'Время варки -'+(8*l)+'%';}},
+ {id:'grinder',name:'Дробилки и фасовочные станки',desc:'Больше карамели в каждом котле.',icon:'grinder',base:800,mult:2.1,eff:function(l){return 'Объём партии +'+(20*l)+'%';}},
+ {id:'guard',name:'Охрана',desc:'Защита районов от кондитерских картелей.',icon:'guard',base:1200,mult:2.2,eff:function(l){return 'Давление картелей -'+(15*l)+'%';}},
+ {id:'logi',name:'Логистика',desc:'Открывает и расширяет экспортный канал.',icon:'truck',base:3000,mult:2.3,eff:function(l){return 'Экспорт: до '+(40+50*l)+' шт.';}}
+];
+function eqCost(e,l){return Math.round(e.base*Math.pow(e.mult,l));}
+
+var TECH=[
+ {id:'syrup',name:'Идеальный сироп',desc:'+3% к итоговой чистоте каждой партии.',cost:8,icon:'flask'},
+ {id:'bribe',name:'Подпольные связи',desc:'Взятки и переговоры дешевле на 35%.',cost:12,icon:'cash'},
+ {id:'false',name:'Двойное дно',desc:'Продажи привлекают на 30% меньше внимания.',cost:20,icon:'eye'},
+ {id:'cool',name:'Скрытая вентиляция',desc:'Внимание инспекции спадает на 60% быстрее.',cost:30,icon:'snow'},
+ {id:'brand',name:'Фирменная обёртка',desc:'+12% к цене всей карамели.',cost:45,icon:'candy'},
+ {id:'diplomat',name:'Дипломатия сладостей',desc:'Давление картелей растёт на 40% медленнее.',cost:60,icon:'shield'},
+ {id:'perf',name:'Перфекционизм',desc:'Зелёная зона температуры шире на 4%.',cost:90,icon:'thermo'},
+ {id:'stock',name:'Склад-призрак',desc:'При облаве теряется на 50% меньше товара.',cost:120,icon:'lock'}
+];
+
+var CH=[
+ {id:0,name:'Дворовые перекупщики',desc:'Низкая цена, нулевой риск.',icon:'yard',mult:0.7,heat:0,max:40,regen:0.5,unlock:0,minP:0},
+ {id:1,name:'Ночные клубы и тусовки',desc:'Яркие рецепты улетают с наценкой +35%.',icon:'club',mult:1.15,heat:0.35,max:60,regen:0.55,unlock:2500,minP:0},
+ {id:2,name:'Сеть подпольных автоматов',desc:'Пассивный доход: автоматы сами продают ваши запасы.',icon:'vend',mult:0.95,heat:0.05,unlock:3500,passive:true,minP:0},
+ {id:3,name:'Элитные закрытые рестораны',desc:'Берут только карамель чистотой от 90%.',icon:'rest',mult:2.0,heat:0.2,max:30,regen:0.2,unlock:18000,minP:90,labReq:3},
+ {id:4,name:'Международный экспорт',desc:'Огромные партии. Нужна прокачанная логистика.',icon:'globe',mult:2.7,heat:0.55,max:150,regen:0.35,unlock:60000,minP:75,logReq:1}
+];
+
+/* ============================================================
+   СОСТОЯНИЕ И СОХРАНЕНИЕ
+   ============================================================ */
+function newState(){
+  return {v:1,cash:200,cry:0,
+    ing:{sugar:12,flavor:6,catalyst:2,dye:6,acid:2,mint:0,honey:0,spice:0,frost:0,gold:0,reagent:0},
+    stock:{},rec:[0],sel:0,pots:1,lab:1,
+    eq:{thermo:0,filter:0,mixer:0,grinder:0,guard:0,logi:0},
+    tech:{},
+    ch:{unl:[0],dem:{0:40},mach:0,macc:0},
+    heat:5,cart:0,low:0,block:{},
+    auto:{on:false,t:0,msg:''},
+    st:{earn:0,batches:0,best:0,raids:0,hits:0,units:0},
+    ach:{},day:'',streak:0,lawyer:0,prest:0,ord:null,ordT:0,bm:'std',bc:false,pst:0,story:0,staff:{lab:0,cour:0,guard:0},dist:0,dunl:[0],q:0,qa:0,cmpEnd:0,
+    ts:Date.now()};
+}
+function migrate(o){
+  var d=newState(),s={},k;
+  for(k in d)s[k]=(o[k]!==undefined)?o[k]:d[k];
+  s.ing=Object.assign({},d.ing,o.ing||{});
+  s.eq=Object.assign({},d.eq,o.eq||{});
+  s.ch=Object.assign({},d.ch,o.ch||{});
+  s.ch.dem=Object.assign({},(o.ch&&o.ch.dem)||{});
+  if(!s.ch.unl||!s.ch.unl.length)s.ch.unl=[0];
+  s.st=Object.assign({},d.st,o.st||{});
+  s.auto=Object.assign({},d.auto,o.auto||{});
+  s.ach=o.ach||{};s.staff=Object.assign({},d.staff,o.staff||{});s.dunl=o.dunl||[0];
+  s.tech=o.tech||{};s.stock=o.stock||{};s.block=o.block||{};
+  if(!s.rec||!s.rec.length)s.rec=[0];
+  if(s.rec.indexOf(s.sel)<0)s.sel=s.rec[0];
+  s.lab=clamp(s.lab|0,1,8);
+  return s;
+}
+function load(){
+  try{var raw=localStorage.getItem(SAVE_KEY);if(raw)return migrate(JSON.parse(raw));}catch(e){}
+  return newState();
+}
+var S=load();
+function save(){try{S.ts=Date.now();localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
+
+/* ============================================================
+   ПРОИЗВОДНЫЕ ВЕЛИЧИНЫ
+   ============================================================ */
+function lab(){return LABS[S.lab-1];}
+function eq(id){return S.eq[id]||0;}
+function hasT(id){return !!S.tech[id];}
+function maxPots(){return lab().pots;}
+function unitsPerPot(){return Math.round(12*(1+0.2*eq('grinder')));}
+function zoneW(){return 24+3*eq('thermo')+(hasT('perf')?4:0);}
+function brewSpeed(){return lab().speed*(1-0.08*eq('mixer'));}
+function smellMul(){return lab().smell*(1-0.12*eq('filter'));}
+function heatDecay(){return 0.12*(1+lab().cool)*(1+(hasT('cool')?0.6:0));}
+function bribeMul(){return hasT('bribe')?0.65:1;}
+function pm(p){return Math.pow(p/99.1,2)*1.6;}
+function hotId(){return Math.floor(Date.now()/864e5)%REC.length;}
+function trend(rid){return (1+0.12*Math.sin(Date.now()/1000/90+rid*2.1))*(rid===hotId()?1.35:1);}
+function trendDir(rid){return Math.cos(Date.now()/1000/90+rid*2.1)>=0?1:-1;}
+function ingPrice(id){var i=ING.indexOf(ingById(id));return Math.max(1,Math.round(ING[i].price*(1+0.22*Math.sin(Date.now()/1000/75+i*1.7))));}
+function chMax(c){return c.id===4?40+50*eq('logi'):c.max;}
+function unitPrice(rid,p,c){
+  var r=REC[rid],v=r.price*pm(p)*c.mult*trend(rid);
+  if(c.id===1&&r.bright)v*=1.35;
+  if(c.id===0&&r.id<=2)v*=1.08;
+  if(hasT('brand'))v*=1.12;
+  v*=1+0.1*S.prest;
+  v*=DIST[S.dist||0].p*(S.cmpEnd>Date.now()?0.85:1);
+  return v;
+}
+function addHeat(x){S.heat=clamp(S.heat+(x>0?x*DIST[S.dist||0].h:x),0,100);}
+function addCart(x){S.cart=clamp(S.cart+x*(1-0.15*eq('guard'))*(hasT('diplomat')?0.6:1),0,100);}
+function stockTotal(){var n=0;for(var k in S.stock)n+=S.stock[k].q;return n;}
+function addStock(rid,q,p){
+  var s=S.stock[rid];
+  if(s){s.p=(s.q*s.p+q*p)/(s.q+q);s.q+=q;}else S.stock[rid]={q:q,p:p};
+  S.stock[rid].p=Math.round(S.stock[rid].p*10)/10;
+}
+function bribeCost(){return Math.round((150+S.heat*12*(1+0.5*(S.lab-1)))*bribeMul());}
+function negotCost(){return Math.round((250+S.cart*14*(1+0.5*(S.lab-1)))*bribeMul());}
+
+/* ============================================================
+   ГРАФИКА: КОНФЕТЫ И ЛАБОРАТОРИИ (SVG)
+   ============================================================ */
+var gid=0;
+function candy(r){
+  var id='cg'+(++gid),a=r.cols[0],b=r.cols[1],d='';
+  switch(r.deco){
+    case 'swirl':d='<path d="M30 62 Q48 28 72 52 Q58 78 40 62" stroke="#ffe9c8" stroke-opacity=".75" stroke-width="3.5" fill="none" stroke-linecap="round"/>';break;
+    case 'speck':d='<g fill="#fff" opacity=".8"><circle cx="38" cy="44" r="2.4"/><circle cx="60" cy="38" r="2"/><circle cx="52" cy="62" r="2.6"/><circle cx="70" cy="60" r="1.8"/><circle cx="34" cy="68" r="1.8"/></g>';break;
+    case 'bolt':d='<path d="M56 24 L38 54 H52 L46 78 L68 46 H54 Z" fill="#fff6b0" stroke="#7a4a00" stroke-width="1.5"/>';break;
+    case 'glow':d='<circle cx="50" cy="50" r="30" fill="#7affe0" opacity=".25"/><path d="M50 30 L56 46 L72 50 L56 54 L50 70 L44 54 L28 50 L44 46Z" fill="#eafff8" opacity=".85"/>';break;
+    case 'gold':d='<g fill="#fff2a0" stroke="#9a6a00" stroke-width="1"><polygon points="36,40 42,36 46,42 40,46"/><polygon points="58,34 64,32 66,38 60,40"/><polygon points="52,58 60,56 62,64 54,66"/><polygon points="34,64 40,62 42,68 36,70"/><polygon points="68,56 74,56 74,62 68,62"/></g>';break;
+    case 'crown':d='<path d="M30 62 L34 38 L44 52 L50 34 L56 52 L66 38 L70 62 Z" fill="#e8fbff" stroke="#0a5a9a" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="34" r="2.6" fill="#fff"/>';break;
+    case 'snow':d='<g stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"><path d="M50 28 V72 M31 39 L69 61 M31 61 L69 39"/></g>';break;
+    case 'honey':d='<path d="M50 30 C40 46 36 54 50 66 C64 54 60 46 50 30Z" fill="#fff0b0" opacity=".8" stroke="#8a4a00" stroke-width="1.5"/>';break;
+    case 'flame':d='<path d="M50 28 C44 42 34 48 40 62 C44 70 56 70 60 62 C66 50 54 46 50 28Z" fill="#ffe08a" stroke="#7a1a00" stroke-width="1.5"/>';break;
+    case 'aurora':d='<g fill="none" stroke-linecap="round" stroke-width="3.5"><path d="M28 56 Q44 30 58 52 T76 40" stroke="#eafff6" opacity=".85"/><path d="M30 66 Q46 44 60 62 T76 52" stroke="#b9a0ff" opacity=".75"/></g>';break;
+    case 'heis':d='<circle cx="50" cy="50" r="28" fill="#fff" opacity=".2"/><path d="M32 70 V32 M32 51 H54 M54 32 V70" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none"/><text x="60" y="72" font-size="17" font-weight="900" fill="#0a3a78" font-family="Impact,Arial">100</text>';break;
+    case 'facet':d='<path d="M30 40 L50 56 L70 40 M50 56 V80" stroke="#fff" stroke-opacity=".5" stroke-width="2" fill="none"/>';break;
+    default:d='<ellipse cx="38" cy="36" rx="8" ry="4" fill="#fff" opacity=".5" transform="rotate(-30 38 36)"/>';
+  }
+  return '<svg viewBox="0 0 100 100" class="candy"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs>'+
+  '<polygon points="50,8 82,30 90,66 62,92 28,86 10,56 20,26" fill="url(#'+id+')" stroke="rgba(0,0,0,.4)" stroke-width="2.5" stroke-linejoin="round"/>'+
+  '<polygon points="50,8 82,30 62,44 38,40 20,26" fill="#fff" opacity=".26"/>'+
+  '<polygon points="62,44 90,66 62,92 50,64" fill="#000" opacity=".14"/>'+
+  '<path d="M38 40 L50 64 L28 86 M50 64 L62 92" stroke="rgba(255,255,255,.35)" fill="none"/>'+d+'</svg>';
+}
+function cm(r){return '<div class="cm">'+candy(r)+'</div>';}
+
+function labSvg(l){
+  var h='<svg class="labsvg" viewBox="0 0 320 130" preserveAspectRatio="xMidYMid slice">';
+  if(l===1){
+    h+='<rect width="320" height="130" fill="#b99557"/><rect y="94" width="320" height="36" fill="#6b4a2a"/>'+
+    '<rect x="22" y="16" width="72" height="54" fill="#8fd0e4" stroke="#4a3320" stroke-width="5"/><path d="M58 16v54M22 43h72" stroke="#4a3320" stroke-width="3"/>'+
+    '<rect x="150" y="72" width="130" height="30" rx="3" fill="#8a8a80"/><rect x="150" y="98" width="130" height="8" fill="#5a5a50"/>'+
+    '<path d="M176 46h50l-4 26h-42z" fill="#a8aea8" stroke="#444" stroke-width="2"/><ellipse cx="201" cy="46" rx="25" ry="5" fill="#37d4ff" opacity=".85"/>'+
+    '<path d="M190 38c-3-6 3-8 0-14M204 38c-3-6 3-8 0-14M216 38c-3-6 3-8 0-14" stroke="#fff" stroke-opacity=".6" stroke-width="2" fill="none"/>'+
+    '<rect x="290" y="30" width="22" height="40" fill="#7a5a34"/>';
+  }else if(l===2){
+    h+='<rect width="320" height="130" fill="#7a6a58"/><rect y="100" width="320" height="30" fill="#4a4036"/>'+
+    '<rect x="20" y="20" width="130" height="80" fill="#9a8e7a" stroke="#3a3026" stroke-width="4"/><g stroke="#3a3026" stroke-width="3"><path d="M20 40h130M20 60h130M20 80h130"/></g>'+
+    '<rect x="180" y="30" width="110" height="8" fill="#5a4a38"/><rect x="180" y="62" width="110" height="8" fill="#5a4a38"/>'+
+    '<rect x="188" y="14" width="20" height="16" fill="#b4532a"/><rect x="216" y="18" width="24" height="12" fill="#e8c46a"/>'+
+    '<path d="M196 62l8-14h22l8 14z" fill="#a8aea8" stroke="#333" stroke-width="2"/><path d="M250 62l6-14h18l6 14z" fill="#a8aea8" stroke="#333" stroke-width="2"/>'+
+    '<ellipse cx="226" cy="108" rx="20" ry="8" fill="#2f4a22"/><rect x="210" y="84" width="32" height="24" fill="#3f7a2a"/>';
+  }else if(l===3){
+    h+='<rect width="320" height="130" fill="#e8b565"/><rect y="86" width="320" height="44" fill="#a8683a"/><path d="M0 86 L40 70 L90 82 L140 64 L200 80 L260 66 L320 80 V86Z" fill="#b87a44"/>'+
+    '<rect x="70" y="42" width="150" height="48" rx="6" fill="#e8e4d8" stroke="#3a3026" stroke-width="3"/><rect x="220" y="52" width="38" height="38" rx="4" fill="#d6d0c0" stroke="#3a3026" stroke-width="3"/>'+
+    '<rect x="228" y="57" width="24" height="14" fill="#7fc3d8"/><rect x="84" y="52" width="26" height="16" fill="#7fc3d8" stroke="#3a3026" stroke-width="2"/><rect x="120" y="52" width="26" height="16" fill="#7fc3d8" stroke="#3a3026" stroke-width="2"/>'+
+    '<rect x="70" y="76" width="188" height="6" fill="#2f8a43"/><circle cx="104" cy="94" r="10" fill="#222"/><circle cx="104" cy="94" r="4" fill="#888"/><circle cx="232" cy="94" r="10" fill="#222"/><circle cx="232" cy="94" r="4" fill="#888"/>'+
+    '<g stroke="#2f4a22" stroke-width="6" stroke-linecap="round" fill="none"><path d="M24 110V74M24 96H12V84M24 90H36V80"/></g>';
+  }else if(l===4){
+    h+='<rect width="320" height="130" fill="#3a3a40"/><rect y="104" width="320" height="26" fill="#25252a"/>'+
+    '<g stroke="#7a7a82" stroke-width="5" fill="none"><path d="M0 20H320M40 20V60M160 20V50M280 20V70"/></g><circle cx="40" cy="62" r="5" fill="#b4532a"/><circle cx="160" cy="52" r="5" fill="#b4532a"/>'+
+    '<rect x="26" y="52" width="64" height="52" rx="5" fill="#d8d8d0" stroke="#222" stroke-width="3"/><circle cx="58" cy="80" r="17" fill="#2a6a8a" stroke="#222" stroke-width="3"/><circle cx="58" cy="80" r="9" fill="#37d4ff" opacity=".7"/>'+
+    '<rect x="104" y="52" width="64" height="52" rx="5" fill="#d8d8d0" stroke="#222" stroke-width="3"/><circle cx="136" cy="80" r="17" fill="#2a6a8a" stroke="#222" stroke-width="3"/>'+
+    '<rect x="196" y="40" width="48" height="64" rx="6" fill="#8a8a82" stroke="#222" stroke-width="3"/><ellipse cx="220" cy="40" rx="24" ry="6" fill="#37d4ff" opacity=".8"/>'+
+    '<rect x="262" y="60" width="40" height="44" fill="#6a4a2a" stroke="#222" stroke-width="3"/><path d="M262 76h40M262 90h40" stroke="#222" stroke-width="2"/>';
+  }else if(l===6){
+    h+='<rect width="320" height="130" fill="#7fc3e8"/><circle cx="268" cy="26" r="14" fill="#ffe88a"/><rect y="78" width="320" height="52" fill="#1d6a9a"/><path d="M0 92q20-8 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0" stroke="#7fd0f0" stroke-width="3" fill="none"/>'+
+    '<rect x="60" y="62" width="200" height="14" fill="#6a6a64" stroke="#222" stroke-width="3"/><g stroke="#3a3a36" stroke-width="5"><path d="M80 76V104M130 76V104M190 76V104M240 76V104"/></g>'+
+    '<rect x="84" y="36" width="44" height="26" fill="#d8d8d0" stroke="#222" stroke-width="3"/><rect x="92" y="42" width="12" height="9" fill="#37d4ff"/><path d="M168 62V22H214M214 22V44" stroke="#b4532a" stroke-width="4" fill="none"/><rect x="224" y="44" width="22" height="18" fill="#2f8a43" stroke="#222" stroke-width="3"/>';
+  }else if(l===7){
+    h+='<rect width="320" height="130" fill="#9ab6c8"/><path d="M0 110L60 40L100 70L160 14L230 80L270 50L320 110Z" fill="#5a6a78"/><path d="M160 14L140 36L152 34L160 46L170 34L180 38Z" fill="#fff"/><path d="M60 40L48 56L60 52L68 60Z" fill="#fff"/><rect y="104" width="320" height="26" fill="#3a4650"/>'+
+    '<rect x="126" y="64" width="68" height="42" rx="4" fill="#2a2e34" stroke="#111" stroke-width="3"/><rect x="140" y="72" width="40" height="34" fill="#7a8088" stroke="#111" stroke-width="3"/><path d="M160 72V106" stroke="#111" stroke-width="3"/><circle cx="152" cy="92" r="2.4" fill="#b6ff7a"/><circle cx="168" cy="92" r="2.4" fill="#d6392b"/>';
+  }else if(l===8){
+    h+='<rect width="320" height="130" fill="#05060f"/><g fill="#fff"><circle cx="20" cy="18" r="1.4"/><circle cx="70" cy="40" r="1"/><circle cx="130" cy="14" r="1.6"/><circle cx="210" cy="28" r="1.2"/><circle cx="270" cy="12" r="1.5"/><circle cx="300" cy="50" r="1"/><circle cx="40" cy="70" r="1"/></g><ellipse cx="160" cy="150" rx="220" ry="48" fill="#1d5aa8"/><ellipse cx="160" cy="150" rx="220" ry="48" fill="none" stroke="#7fd0f0" stroke-width="3" opacity=".6"/>'+
+    '<g stroke="#222" stroke-width="2.5"><rect x="110" y="50" width="100" height="26" rx="13" fill="#d8d8d0"/><rect x="70" y="56" width="40" height="14" fill="#2a6a8a"/><rect x="210" y="56" width="40" height="14" fill="#2a6a8a"/><rect x="146" y="34" width="28" height="16" rx="4" fill="#b8b8b0"/><circle cx="160" cy="63" r="6" fill="#37d4ff"/></g><path d="M40 63H70M250 63H280" stroke="#9ab6c8" stroke-width="3"/>';
+  }else{
+    h+='<rect width="320" height="130" fill="#10202a"/><rect y="106" width="320" height="24" fill="#0a141a"/>'+
+    '<g fill="#2a4a5a" stroke="#6ab0c8" stroke-width="2"><rect x="16" y="26" width="56" height="80" rx="10"/><rect x="86" y="40" width="46" height="66" rx="9"/><rect x="146" y="20" width="60" height="86" rx="11"/></g>'+
+    '<g fill="#37d4ff" opacity=".55"><rect x="22" y="70" width="44" height="30" rx="6"/><rect x="92" y="78" width="34" height="22" rx="5"/><rect x="152" y="64" width="48" height="36" rx="7"/></g>'+
+    '<path d="M0 112H320" stroke="#6ab0c8" stroke-width="4"/><g fill="#3a6a7a"><rect x="30" y="104" width="16" height="12" fill="#37d4ff"/><rect x="100" y="104" width="16" height="12" fill="#b6ff7a"/><rect x="170" y="104" width="16" height="12" fill="#37d4ff"/></g>'+
+    '<g stroke="#6ab0c8" stroke-width="4" fill="none"><path d="M44 26V10H110V40M176 20V8H260"/></g>'+
+    '<rect x="228" y="46" width="76" height="58" rx="5" fill="#1a3340" stroke="#6ab0c8" stroke-width="2"/><g fill="#b6ff7a"><circle cx="244" cy="62" r="3"/><circle cx="258" cy="62" r="3" fill="#37d4ff"/><circle cx="272" cy="62" r="3" fill="#ffd23a"/></g><path d="M238 82h56M238 92h40" stroke="#6ab0c8" stroke-width="2"/>';
+  }
+  return h+'</svg>';
+}
+
+/* ============================================================
+   UI-ОБЩЕЕ: toast, modal
+   ============================================================ */
+var modalOpen=false,modalQ=[],modalBtns=[];
+function toast(t,k){
+  if(k==='bad')sfx('err');
+  var box=$('#toasts');while(box.children.length>2)box.removeChild(box.firstChild);
+  var d=document.createElement('div');d.className='toast '+(k||'');d.textContent=tr(t);box.appendChild(d);
+  setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},2800);
+}
+function openModal(m){
+  if(modalOpen){modalQ.push(m);return;}
+  modalOpen=true;modalBtns=[];
+  var bt=(m.btns||[{l:'Ок'}]).map(function(b){
+    var i=modalBtns.push(b.fn||null)-1;
+    return '<button class="btn '+(b.cls||'sand')+'" '+(b.dis?'disabled':'')+' data-mi="'+i+'">'+b.l+'</button>';
+  }).join('');
+  var el=$('#modal');
+  el.innerHTML=tr('<div class="mcard"><h3>'+m.t+'</h3><p>'+m.x+'</p><div class="mbtns">'+bt+'</div></div>');
+  el.classList.add('on');
+}
+function closeModal(){
+  modalOpen=false;var el=$('#modal');el.classList.remove('on');el.innerHTML='';
+  if(modalQ.length)openModal(modalQ.shift());
+}
+
+/* ============================================================
+   НАВИГАЦИЯ И ОТРИСОВКА ВКЛАДОК
+   ============================================================ */
+var view='menu',lastView='';
+function show(name){
+  view=name;
+  var gm=(name!=='menu'&&name!=='brew'&&name!=='settings');
+  $('#screen-menu').classList.toggle('on',name==='menu');
+  $('#screen-settings').classList.toggle('on',name==='settings');
+  $('#screen-game').classList.toggle('on',gm);
+  $('#screen-brew').classList.toggle('on',name==='brew');
+  if(gm){renderTab();updateNav();updateHud();}
+}
+function go(name){show(name);}
+function updateNav(){
+  var bs=document.querySelectorAll('#nav button');
+  for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].dataset.to===view);
+}
+var ACH=[
+  {id:'b1',n:'Первая партия',d:'Свари 1 партию',c:function(){return S.st.batches>=1;},r:1},
+  {id:'b25',n:'Поставщик',d:'Свари 25 партий',c:function(){return S.st.batches>=25;},r:3},
+  {id:'p95',n:'Чистота 95%',d:'Достигни чистоты 95%',c:function(){return S.st.best>=95;},r:3},
+  {id:'p99',n:'Голубая магия',d:'Достигни чистоты 99%',c:function(){return S.st.best>=99;},r:6},
+  {id:'e10',n:'Первая десятка',d:'Заработай $10 000',c:function(){return S.st.earn>=1e4;},r:2},
+  {id:'e1m',n:'Миллионер',d:'Заработай $1 000 000',c:function(){return S.st.earn>=1e6;},r:8},
+  {id:'u500',n:'Тираж',d:'Продай 500 шт.',c:function(){return S.st.units>=500;},r:3},
+  {id:'r1',n:'Облава',d:'Пережить 1 облаву',c:function(){return S.st.raids>=1;},r:2},
+  {id:'l5',n:'Империя',d:'Лаборатория ур. 5',c:function(){return S.lab>=5;},r:10},
+  {id:'l8',n:'Сладкий космос',d:'Лаборатория ур. 8',c:function(){return S.lab>=8;},r:25}];
+function checkAch(){
+  ACH.forEach(function(a){
+    if(S.ach[a.id]||!a.c())return;
+    S.ach[a.id]=1;S.cry+=a.r;sfx('up');
+    toast('Достижение: '+a.n+' (+'+a.r+' кристаллов)');save();
+  });
+}
+function rAch(){
+  var n=0,h='';
+  ACH.forEach(function(a){var o=S.ach[a.id];if(o)n++;
+    h+='<p style="opacity:'+(o?1:.5)+'">'+(o?'✔ ':'○ ')+'<b>'+a.n+'</b> — '+a.d+' <span style="color:var(--blue)">+'+a.r+'</span></p>';});
+  return '<div class="sec">Достижения '+n+'/'+ACH.length+'</div><div class="card">'+h+'</div>';
+}
+function dailyBonus(){
+  var t=new Date(),k=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate();
+  if(S.day===k)return;
+  var y=new Date(Date.now()-864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
+  S.streak=(S.day===yk)?Math.min(S.streak+1,7):1;S.day=k;
+  var cash=200*S.lab*S.streak,cry=S.streak>=7?3:1;
+  S.cash+=cash;S.cry+=cry;save();
+  setTimeout(function(){toast('Ежедневный бонус (день '+S.streak+'): $'+money(cash)+' + '+cry+' кристалл.');},900);
+}
+function bmUi(){
+  var m=[['std','Обычная'],['night','Ночная'],['exp','Эксперимент']],h='<div class="btn-row">';
+  m.forEach(function(x){h+='<button class="btn sm '+(S.bm===x[0]?'sand':'dark')+'" data-act="bmode" data-m="'+x[0]+'">'+x[1]+'</button>';});
+  h+='</div><div class="btn-row"><button class="btn sm '+(S.bc?'blue':'dark')+'" data-act="bcool">Охлаждение: '+(S.bc?'вкл':'выкл')+'</button></div>';
+  var d={std:'Классическая варка.',night:'Ночная: запах вдвое слабее, но котёл почти не виден.',exp:'Эксперимент: непредсказуемый результат, от брака до открытия.'};
+  h+='<p style="font-size:.74em;color:#c9b27c;margin:.4em 0">'+d[S.bm]+(S.bc?' Охлаждение: в конце вовремя перелейте массу в форму.':'')+'</p>';
+  h+='<p style="font-size:.74em;color:var(--blue);margin:.2em 0">Серия идеальных варок (95%+): x'+(1+0.1*Math.min(S.pst||0,5)).toFixed(1)+' к выходу (макс. x1.5)</p>';
+  return h;
+}
+var escMode=0,escBusy=false,stt={lab:0,cour:0};
+var DIST=[
+  {n:'Старый квартал',d:'Спокойно, цены обычные.',p:1,h:1,c:0},
+  {n:'Рабочая окраина',d:'Цены -10%, внимание растёт на 30% медленнее.',p:0.9,h:0.7,c:3000},
+  {n:'Деловой центр',d:'Цены +25%, но внимание растёт на 40% быстрее.',p:1.25,h:1.4,c:12000},
+  {n:'Порт',d:'Цены +15%, внимание растёт на 15% быстрее.',p:1.15,h:1.15,c:30000}];
+var STAFF={lab:['Лаборант','Сам варит выбранный рецепт'],cour:['Курьер','Сам продаёт товар по дворовым ценам'],guard:['Охранник','Снижает давление картелей']};
+function staffCost(l){return Math.round(1200*Math.pow(2.2,l));}
+function staffTick(dt){
+  var st=S.staff,n=st.lab+st.cour+st.guard;if(!n||S.st.batches<1)return;
+  S.cash=Math.max(0,S.cash-n*0.4*S.lab*dt);
+  if(st.lab>0){stt.lab+=dt;if(stt.lab>=75-10*st.lab){stt.lab=0;autoBrew();}}
+  if(st.cour>0){stt.cour+=dt;if(stt.cour>=18-2*st.cour){stt.cour=0;for(var i=0;i<st.cour;i++){if(!sellOneBest(0))break;}}}
+  if(st.guard>0)S.cart=Math.max(0,S.cart-0.05*st.guard*dt);
+}
+function rStaff(){
+  var h='<div class="sec">Помощники</div><div class="card"><p>Работают сами, но получают зарплату каждую секунду. Уровень до 5.</p>';
+  ['lab','cour','guard'].forEach(function(k){
+    var l=S.staff[k],c=staffCost(l);
+    h+='<div class="row" style="justify-content:space-between;margin:.5em 0"><span style="font-size:.8em"><b>'+STAFF[k][0]+' ур.'+l+'</b><br><small>'+STAFF[k][1]+'</small></span><button class="btn sm sand" data-act="hire" data-k="'+k+'"'+(l>=5||S.cash<c?' disabled':'')+'>'+(l>=5?'Макс.':(l?'Улучшить':'Нанять')+' $'+money(c))+'</button></div>';
+  });
+  return h+'</div>';
+}
+function rMap(){
+  var h='<div class="sec">Карта города</div><div class="card"><p>Район меняет цены и скорость роста внимания. Переезд занимает 10 секунд.</p>';
+  DIST.forEach(function(D,i){
+    var own=S.dunl.indexOf(i)>=0,cur=S.dist===i;
+    h+='<div class="row" style="justify-content:space-between;margin:.5em 0"><span style="font-size:.8em"><b>'+D.n+'</b><br><small>'+D.d+'</small></span><button class="btn sm '+(cur?'dark':'sand')+'" data-act="distGo" data-i="'+i+'"'+(cur||(!own&&S.cash<D.c)?' disabled':'')+'>'+(cur?'Здесь':(own?'Переехать':'Открыть $'+money(D.c)))+'</button></div>';
+  });
+  return h+'</div>';
+}
+var QUESTS=[
+ {t:'Старый наставник',intro:'В дверь заходит бывший профессор химии: «Слышал, ты снова варишь. Покажи, что рука не дрогнула. Сделай три партии».',g:'Сварите 3 партии',p:function(){return Math.min(3,S.st.batches)+'/3';},c:function(){return S.st.batches>=3;},done:'Профессор пробует конфету и кивает: «Школа не пропала». Он оставляет конверт.',cash:400},
+ {t:'Странный покупатель',intro:'Человек в тёмных очках шепчет: «Говорят, у вас лучшая карамель в районе. Докажите: наторгуйте на $2 000».',g:'Заработайте $2 000',p:function(){return '$'+money(Math.min(2000,S.st.earn))+' / $2 000';},c:function(){return S.st.earn>=2000;},done:'Покупатель усмехается: «Я так и думал». И уходит, забыв очки на столе.',cry:2},
+ {t:'Чистота решает всё',intro:'Профессор звонит ночью: «Запомни: в карамели главное чистота. Добейся хотя бы 85%».',g:'Сварите партию чистотой 85%+',p:function(){return Math.min(85,Math.round(S.st.best))+'% / 85%';},c:function(){return S.st.best>=85;},done:'«Вот это уже работа химика», — говорит профессор в трубку.',cry:3},
+ {t:'Новые клиенты',intro:'Знакомый бармен: «Клубы платят щедрее дворов. Но надо открыть к ним канал сбыта».',g:'Откройте второй канал сбыта',p:function(){return Math.min(2,S.ch.unl.length)+'/2';},c:function(){return S.ch.unl.length>=2;},done:'Бармен включает музыку погромче: «Теперь вечеринка за ваш счёт, шучу».',cry:3},
+ {t:'Инспектор с двойным дном',intro:'Инспектор берёт конверт и улыбается: «Когда начнёте зарабатывать по-крупному, я стану дороже. Пока присматриваюсь». Заработайте $25 000.',g:'Заработайте $25 000',p:function(){return '$'+money(Math.min(25000,S.st.earn))+' / $25 000';},c:function(){return S.st.earn>=25000;},done:'Инспектор прячет блокнот: «Мы с вами в расчёте. Пока».',cash:3000},
+ {t:'Новое место',intro:'Профессор: «В кухне тебе тесно. Найди место получше: нужна лаборатория уровня 3».',g:'Купите лабораторию ур. 3',p:function(){return Math.min(3,S.lab)+'/3';},c:function(){return S.lab>=3;},done:'Профессор осматривает новый цех: «Здесь можно творить».',cry:5},
+ {t:'Коллекционер вкусов',intro:'Богатый гурман просит: «Хочу попробовать пять разных рецептов вашей фабрики».',g:'Откройте 5 рецептов',p:function(){return Math.min(5,S.rec.length)+'/5';},c:function(){return S.rec.length>=5;},done:'Гурман разложил конфеты по цветам: «Каждая как картина».',cry:8},
+ {t:'Голубая магия',intro:'Профессор: «Есть чистота, которую считали невозможной. 99%. Покажи».',g:'Сварите партию чистотой 99%+',p:function(){return Math.min(99,Math.round(S.st.best))+'% / 99%';},c:function(){return S.st.best>=99;},done:'Профессор долго молчит, потом тихо говорит: «Я не видел такого никогда».',cry:15},
+ {t:'Карамель Хайзенберга',intro:'Профессор: «Последний шаг. Чистота 100%. Идеальная варка, без единой ошибки. Для этого нужны лучшие термометры и точные руки».',g:'Сварите партию чистотой 100%',p:function(){return Math.min(100,Math.round(S.st.best))+'% / 100%';},c:function(){return S.st.best>=100;},done:'Вы сделали невозможное. Мир запретил карамель, но теперь о вас будут говорить как о химике, сварившем идеал. Это конец истории, но не конец игры.',cry:40}
+];
+function rQuest(){
+  var q=QUESTS[S.q];
+  if(!q)return '<div class="sec">Задания</div><div class="card"><p>Все задания выполнены. Вы легенда.</p></div>';
+  return '<div class="sec">Задание '+(S.q+1)+'/'+QUESTS.length+'</div><div class="card"><h3>'+q.t+'</h3><p>'+q.g+'</p><p style="color:var(--blue)">Прогресс: '+q.p()+'</p></div>';
+}
+function qDialog(t,x){openModal({t:t,x:x,btns:[{l:'Ок',cls:'green',fn:refresh}]});}
+function checkQuest(){
+  if(modalOpen||escBusy||!S.story||view==='menu'||view==='brew'||view==='settings')return;
+  var q=QUESTS[S.q];if(!q)return;
+  if(!S.qa){S.qa=1;save();sfx('ping');qDialog(q.t,q.intro);return;}
+  if(q.c()){
+    var rw=[];if(q.cash){S.cash+=q.cash;rw.push('$'+money(q.cash));}if(q.cry){S.cry+=q.cry;rw.push(q.cry+' кристаллов');}
+    S.q++;S.qa=0;save();sfx('win');
+    qDialog(q.t+': выполнено',q.done+'<br><b>Награда: '+rw.join(' и ')+'</b>');
+  }
+}
+function startEscape(){
+  escBusy=true;var need=Math.max(10,20-2*(S.lab-1)),taps=0,left=5,ph=document.getElementById('phone'),el=document.createElement('div'),iv;
+  el.style.cssText='position:absolute;inset:0;z-index:60;background:#000d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1em;text-align:center;padding:1.5em';
+  el.innerHTML=tr('<h2 style="margin:0;color:#ff8a70">Убирай улики!</h2><div style="font-size:.9em">Нажимай быстро: '+need+' нажатий за 5 секунд</div><div style="width:80%;height:1em;background:#0009;border-radius:1em;overflow:hidden"><i id="esc-b" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#6aa832,#37d4ff)"></i></div><div id="esc-t" style="font-size:1.4em;font-weight:800;color:#f4d9a0">5.0</div><button id="esc-btn" class="btn green cta" style="max-width:80%">ТАП!</button>');
+  ph.appendChild(el);
+  function done(ok){clearInterval(iv);if(el.parentNode)el.parentNode.removeChild(el);escBusy=false;escMode=ok?2:1;raid();}
+  document.getElementById('esc-btn').addEventListener('pointerdown',function(e){e.preventDefault();sfx('tap');taps++;document.getElementById('esc-b').style.width=Math.min(100,taps/need*100)+'%';if(taps>=need)done(true);});
+  iv=setInterval(function(){left-=0.1;var t=document.getElementById('esc-t');if(t)t.textContent=Math.max(0,left).toFixed(1);if(left<=0)done(false);},100);
+}
+var STORY=[
+  {t:'Запрет',x:'Однажды утром весь мир проснулся с одной и той же новостью: <b>карамель запрещена</b>. Везде, во всех странах сразу. Её признали «угрозой общественному благосостоянию», а леденцы объявили вне закона. Кондитерские закрылись, а на полках остались только овсяное печенье и грусть.'},
+  {t:'Химик',x:'Вы лучший химик по карамели в стране. Годами вы подбирали температуру, пропорции и вкус, а теперь ваша профессия вне закона. Лаборатории закрыты, оборудование изъято, а за один запах жжёного сахара могут прийти с проверкой.'},
+  {t:'Надзор',x:'Теперь за рынком следят жёстко. <b>ГОСТ-инспекция</b> принюхивается к каждому подвалу, а кондитерские <b>картели</b> делят районы и хотят свою долю. Любая варка пахнет, любая продажа оставляет след. Чем громче бизнес, тем ближе облава.'},
+  {t:'Начало',x:'Вы решаетесь. Старая кухня в тихом доме, пара кастрюль и немного сахара. Вы варите тихо, продаёте осторожно и копите на лабораторию получше. Цель одна: однажды сварить легендарную <b>Карамель Хайзенберга</b> чистотой 100%, которую не бывало на свете.'}
+];
+function showStory(i){
+  i=i||0;var st=STORY[i],last=i>=STORY.length-1;
+  openModal({t:st.t+' ('+(i+1)+'/'+STORY.length+')',x:st.x,btns:last?[{l:'Начать варить',cls:'green',fn:function(){}}]:[{l:'Дальше',cls:'sand',fn:function(){showStory(i+1);}},{l:'Пропустить',cls:'dark',fn:function(){}}]});
+}
+function prestNeed(){return 1e6*(S.prest+1);}
+function rankName(){var r=[['Новичок',0],['Кондитер',1e4],['Поставщик',1e5],['Барон карамели',1e6],['Король карамели',1e7]],n=r[0][0];r.forEach(function(x){if(S.st.earn>=x[1])n=x[0];});return n+(S.prest?' '+'★'.repeat(Math.min(S.prest,9)):'');}
+function lawCost(){return 1500*S.lab;}
+function rExtra(){
+  var need=prestNeed(),ok=S.st.earn>=need,h='<div class="sec">Звание</div><div class="card"><h3>'+rankName()+'</h3><p>Заработано: $'+money(S.st.earn)+'. Бонус престижа: +'+(S.prest*10)+'% к ценам.</p></div>';
+  h+='<div class="sec">Адвокат</div><div class="card"><p>Отбивает одну облаву: без штрафа и конфискации. Сейчас: <b>'+S.lawyer+'</b>/3.</p><div class="btn-row"><button class="btn sand" data-act="buyLaw"'+(S.lawyer>=3||S.cash<lawCost()?' disabled':'')+'>Нанять — $'+money(lawCost())+'</button></div></div>';
+  h+='<div class="sec">Престиж</div><div class="card"><p>Сбросьте прогресс ради постоянного +10% к ценам и 5 кристаллов. Нужно заработать $'+money(need)+' (сейчас $'+money(S.st.earn)+').</p><div class="btn-row"><button class="btn rust" data-act="prestige"'+(ok?'':' disabled')+'>Начать заново</button></div></div>';
+  return h;
+}
+function rOrder(){
+  var h='<div class="sec">Спрос дня</div><div class="card"><p>Сегодня бум на «'+REC[hotId()].name+'»: цена +35%.</p>'+(S.cmpEnd>Date.now()?'<p>Конкурент давит цены (-15%) ещё '+Math.ceil((S.cmpEnd-Date.now())/1000)+' с.</p>':'')+'</div><div class="sec">Заказ</div>',o=S.ord;
+  if(!o)return h+'<div class="card"><p>Новых заказов пока нет. Они появляются каждые пару минут.</p></div>';
+  var st=S.stock[o.rid],ok=st&&st.q>=o.q&&st.p>=o.minP,left=Math.max(0,Math.ceil((o.exp-Date.now())/1000));
+  return h+'<div class="card"><h3>'+o.q+' шт. «'+REC[o.rid].name+'»</h3><p>Чистота от '+o.minP+'%, цена x'+o.mul+'. Осталось '+left+' с.</p><div class="btn-row"><button class="btn green" data-act="ordDo"'+(ok?'':' disabled')+'>Выполнить</button><button class="btn dark" data-act="ordSkip">Отказаться</button></div></div>';
+}
+function ordTick(){
+  var now=Date.now();
+  if(S.ord&&now>S.ord.exp){S.ord=null;S.ordT=now+90000;}
+  else if(!S.ord&&S.st.batches>0&&now>S.ordT&&S.rec.length){
+    var rid=S.rec[Math.floor(Math.random()*S.rec.length)];
+    S.ord={rid:rid,q:6+Math.floor(Math.random()*9),minP:80+Math.floor(Math.random()*13),mul:2,exp:now+300000};
+    if(!modalOpen&&view!=='menu'&&view!=='brew'&&view!=='settings'){toast('Новый заказ на вкладке «Сбыт»');if(view==='market')refresh();}
+  }
+}
+function renderTab(){
+  var c=$('#content');
+  var keep=(lastView===view)?c.scrollTop:0;
+  var fn={lab:rLab,upg:rUpg,market:rMarket,rec:rRec}[view];
+  if(!fn)return;
+  c.innerHTML=tr(fn()+(view==='upg'?rAch()+rQuest()+rStaff()+rMap()+rExtra():'')+(view==='market'&&mtab==='sell'?rOrder():''));c.scrollTop=keep;lastView=view;
+}
+function refresh(){if(view==='menu'||view==='brew'||view==='settings')return;renderTab();updateHud();}
+
+/* ---------- HUD ---------- */
+function updateHud(){
+  setT('h-cash','$'+money(S.cash));
+  setT('h-cry',money(S.cry));
+  setT('h-lab','Ур.'+S.lab+' '+tr(lab().name).split(' ').slice(0,3).join(' '));
+  var h=document.getElementById('h-heat'),c=document.getElementById('h-cart');
+  if(h)h.style.width=S.heat.toFixed(1)+'%';
+  if(c)c.style.width=S.cart.toFixed(1)+'%';
+  setT('h-heat-t',Math.floor(S.heat)+'%');
+  setT('h-cart-t',Math.floor(S.cart)+'%');
+  var bh=document.getElementById('bar-heat'),bc=document.getElementById('bar-cart');
+  if(bh)bh.classList.toggle('danger',S.heat>=80);
+  if(bc)bc.classList.toggle('danger',S.cart>=80);
+}
+
+/* ---------- ЛАБОРАТОРИЯ ---------- */
+function rLab(){
+  var L=lab(),r=REC[S.sel];
+  S.pots=clamp(S.pots,1,maxPots());
+  var pots=S.pots,units=unitsPerPot()*pots,ok=true,chips='';
+  ING.forEach(function(i){
+    var need=(r.cost[i.id]||0)*pots;if(!need)return;
+    var have=S.ing[i.id]||0;if(have<need)ok=false;
+    chips+='<div class="need '+(have>=need?'ok':'bad')+'">'+ic(i.icon)+'<span>'+i.short+'</span><b>'+have+'/'+need+'</b></div>';
+  });
+  var low=S.low>Date.now();
+  var est=Math.round(units*r.price*pm(85));
+  var h='';
+  if(S.st.batches===0){
+    h+='<div class="card"><h3>'+ic('flask')+'Как играть</h3><ol class="how"><li>Выберите рецепт и число котлов, нажмите «Начать варку».</li><li>Удерживайте «Греть», чтобы маркер температуры оставался в зелёной зоне.</li><li>Когда сожмётся кольцо, жмите «Высыпать» — это добавление ингредиента.</li><li>Продавайте карамель на Рынке и следите за ГОСТ-инспекцией и картелями.</li></ol></div>';
+  }
+  h+='<div class="card">'+labSvg(S.lab)+
+    '<h3 style="margin-top:.6em">'+ic(L.icon)+L.name+'</h3>'+
+    '<div class="stats"><span class="pill b">'+ic('pot')+'Котлов: '+L.pots+'</span><span class="pill">'+ic('candy')+unitsPerPot()+' шт. на котёл</span><span class="pill r">'+ic('eye')+'Запах x'+smellMul().toFixed(2)+'</span><span class="pill g">'+ic('shield')+'Облавы -'+Math.round(L.raid*100)+'%</span></div></div>';
+  h+='<div class="sec">Варка</div><div class="card">'+
+    '<div class="sel"><button class="arr" data-act="recPrev">'+ic('back')+'</button><div class="selc">'+cm(r)+'<div><b>'+r.name+'</b><small>Базовая цена $'+r.price+' / шт.</small></div></div><button class="arr" data-act="recNext">'+ic('fwd')+'</button></div>'+
+    '<div class="pots"><span>Котлов в варку (макс. '+maxPots()+')</span><div class="stepper"><button data-act="potsDec">'+ic('minus')+'</button><b>'+pots+'</b><button data-act="potsInc">'+ic('plus')+'</button></div></div>'+
+    '<div class="needs">'+chips+'</div>'+
+    '<div class="est"><span>Партия: <b>'+units+' шт.</b></span><span>Выручка ~ $'+money(est)+'</span></div>'+
+    bmUi()+'<button class="btn green cta" data-act="brew" '+((ok&&!low)?'':'disabled')+'>'+ic('fire')+(low?'Вы лежите на дне':(ok?'Начать варку':'Не хватает ингредиентов'))+'</button>'+
+    (ok?'':'<div class="hint">Закупите недостающее на вкладке «Рынок».</div>')+'</div>';
+  h+='<div class="sec">Угрозы</div><div class="card">'+
+    '<h3>'+ic('eye')+'ГОСТ-инспекция (DEA)</h3><p>Внимание растёт от запаха варки и продаж. При 100% — облава: штраф и потеря части партии.</p>'+
+    '<div class="btn-row"><button class="btn dark" id="btn-low" data-act="lowlow">'+ic('clock')+'Залечь на дно</button><button class="btn rust" data-act="bribe">'+ic('cash')+'Подкуп $<span id="bribe-c">'+money(bribeCost())+'</span></button></div>'+
+    '<h3 style="margin-top:.9em">'+ic('shield')+'Кондитерские картели</h3><p>Давление растёт со временем и объёмом продаж. При 100% картель отожмёт район и часть денег. Охрана: уровень '+eq('guard')+'.</p>'+
+    '<div class="btn-row"><button class="btn blue" data-act="negot">'+ic('hand')+'Переговоры $<span id="negot-c">'+money(negotCost())+'</span></button><button class="btn sand" data-act="nav" data-to="upg">'+ic('guard')+'Охрана</button></div></div>';
+  if(L.auto){
+    h+='<div class="card"><h3>'+ic('gear')+'Автоматизация завода</h3><p>Выбранный рецепт варится сам на полную мощность. Чистота автоварки ограничена, зато вы свободны.</p>'+
+    '<button class="btn '+(S.auto.on?'rust':'green')+' cta" data-act="autoToggle">'+(S.auto.on?'Выключить автоварку':'Включить автоварку')+'</button><div class="hint" id="auto-msg">'+(S.auto.msg||'')+'</div></div>';
+  }
+  h+='<div class="sec">Склад</div><div class="card">';
+  var ids=Object.keys(S.stock);
+  if(!ids.length)h+='<p>Склад пуст. Сварите первую партию.</p>';
+  ids.forEach(function(k){var s=S.stock[k],rr=REC[k];h+='<div class="srow">'+cm(rr)+'<div class="sname">'+rr.name+'<small>Чистота '+s.p.toFixed(1)+'%</small></div><div class="sprice">'+Math.floor(s.q)+' шт.</div></div>';});
+  h+='<button class="btn blue cta" data-act="nav" data-to="market" data-sub="sell">'+ic('market')+'К продаже</button></div>';
+  return h;
+}
+
+/* ---------- РЫНОК ---------- */
+var mtab='buy';
+function chReq(c){
+  if(c.labReq&&S.lab<c.labReq)return 'Нужна лаборатория ур.'+c.labReq;
+  if(c.logReq&&eq('logi')<c.logReq)return 'Нужна логистика ур.'+c.logReq;
+  return '';
+}
+function rMarket(){
+  var h='<div class="tabs"><button data-act="mtab" data-t="buy" class="'+(mtab==='buy'?'on':'')+'">'+ic('cash')+'Закупка</button><button data-act="mtab" data-t="sell" class="'+(mtab==='sell'?'on':'')+'">'+ic('truck')+'Сбыт</button></div>';
+  var now=Date.now();
+  if(mtab==='buy'){
+    h+='<div class="sec">Ингредиенты</div><div class="card">';
+    ING.forEach(function(i){
+      h+='<div class="srow"><div style="color:var(--sand2)">'+ic(i.icon,'big')+'</div><div class="sname">'+i.name+'<small>На складе: '+(S.ing[i.id]||0)+'</small></div><div class="sprice">$<b data-ip="'+i.id+'">'+ingPrice(i.id)+'</b></div></div>'+
+      '<div class="btn-row" style="margin:0 0 .5em"><button class="btn sand sm" data-act="buy" data-id="'+i.id+'" data-n="1">+1</button><button class="btn sand sm" data-act="buy" data-id="'+i.id+'" data-n="10">+10</button><button class="btn blue sm" data-act="buy" data-id="'+i.id+'" data-n="0">Макс.</button></div>';
+    });
+    h+='</div><div class="card"><p>Цены на ингредиенты колеблются. Закупайтесь, когда они ниже обычного.</p></div>';
+    return h;
+  }
+  h+='<div class="sec">Каналы сбыта</div>';
+  CH.forEach(function(c){
+    var unl=S.ch.unl.indexOf(c.id)>=0,req=chReq(c);
+    h+='<div class="card '+(unl?'':'locked')+'"><div class="chead">'+ic(unl?c.icon:'lock')+'<div style="flex:1"><b>'+c.name+'</b><small>'+c.desc+'</small></div><span class="pill b">x'+c.mult+'</span></div>';
+    if(!unl){
+      h+='<div class="btn-row"><button class="btn green" data-act="unlockCh" data-ch="'+c.id+'" '+((req||S.cash<c.unlock)?'disabled':'')+'>'+ic('lock')+'Открыть $'+money(c.unlock)+'</button></div>'+(req?'<div class="hint" style="color:#ff9a80">'+req+'</div>':'');
+    }else if(c.passive){
+      var blk=S.block[c.id]>now;
+      var mc=Math.round(2500*Math.pow(1.55,S.ch.mach));
+      h+='<div class="stats"><span class="pill g">'+ic('vend')+'Автоматов: '+S.ch.mach+'/12</span><span class="pill">'+ic('clock')+'1 шт. в 5 с на автомат</span></div>'+
+        (blk?'<div class="hint" style="color:#ff9a80">Захвачен картелем: <b data-blk="'+c.id+'">'+Math.ceil((S.block[c.id]-now)/1000)+'</b> с</div>':'')+
+        '<div class="btn-row"><button class="btn green" data-act="buyMach" '+((S.ch.mach>=12||S.cash<mc)?'disabled':'')+'>'+ic('plus')+(S.ch.mach>=12?'Максимум':'Автомат $'+money(mc))+'</button></div>'+
+        '<div class="hint">Автоматы продают лучшие запасы со склада сами.</div>';
+    }else{
+      var blk2=S.block[c.id]>now,mx=chMax(c),dem=Math.floor(S.ch.dem[c.id]||0);
+      h+='<div class="dem"><i data-dem="'+c.id+'" style="width:'+(dem/mx*100)+'%"></i></div><div class="hint" style="text-align:left;margin:0">Спрос: <b data-demt="'+c.id+'">'+dem+'/'+mx+'</b>'+(c.minP?' &middot; чистота от '+c.minP+'%':'')+'</div>';
+      if(blk2)h+='<div class="hint" style="color:#ff9a80">Захвачен картелем: <b data-blk="'+c.id+'">'+Math.ceil((S.block[c.id]-now)/1000)+'</b> с</div>';
+      var ids=Object.keys(S.stock).map(Number).sort(function(a,b){return unitPrice(b,S.stock[b].p,c)-unitPrice(a,S.stock[a].p,c);});
+      if(!ids.length)h+='<div class="hint">Нет товара на складе.</div>';
+      ids.forEach(function(rid){
+        var s=S.stock[rid],rr=REC[rid],bad=s.p<c.minP;
+        h+='<div class="srow">'+cm(rr)+'<div class="sname">'+rr.name+'<small>'+Math.floor(s.q)+' шт. &middot; '+s.p.toFixed(1)+'%</small></div>'+
+        '<div class="sprice">$<b data-pr="'+c.id+'|'+rid+'">'+unitPrice(rid,s.p,c).toFixed(1)+'</b>'+ic(trendDir(rid)>0?'trend-up':'trend-dn')+'</div>'+
+        '<button class="btn green sm" data-act="sell" data-ch="'+c.id+'" data-rid="'+rid+'" '+((bad||blk2)?'disabled':'')+'>Продать</button></div>';
+      });
+      if(ids.length)h+='<div class="btn-row"><button class="btn blue" data-act="sellall" data-ch="'+c.id+'" '+(blk2?'disabled':'')+'>'+ic('cash')+'Продать всё возможное</button></div>';
+    }
+    h+='</div>';
+  });
+  return h;
+}
+
+/* ---------- РЕЦЕПТЫ ---------- */
+function rRec(){
+  var h='<div class="sec">Книга рецептов</div>';
+  REC.forEach(function(r){
+    var own=S.rec.indexOf(r.id)>=0,cur=S.sel===r.id&&own;
+    var cost='';
+    ING.forEach(function(i){if(r.cost[i.id])cost+='<div class="need ok">'+ic(i.icon)+'<span>'+i.short+'</span><b>'+r.cost[i.id]+'</b></div>';});
+    h+='<div class="card"><div class="row">'+cm(r)+'<div style="flex:1;min-width:0"><b style="color:#fff3cf;font-size:.95em">'+r.name+'</b><div class="hint" style="text-align:left;margin:.1em 0 0">'+r.desc+'</div></div>'+(cur?'<span class="tagr cur">Выбран</span>':(own?'<span class="tagr">Открыт</span>':''))+'</div>'+
+    '<div class="stats"><span class="pill g">'+ic('cash')+'$'+r.price+' / шт.</span><span class="pill r">'+ic('eye')+'Запах '+r.smell+'</span><span class="pill">'+ic('clock')+'Варка ~'+Math.round((15+r.id*1.7))+' с</span></div>'+
+    '<div class="needs" style="margin-top:.4em">'+cost+'</div>';
+    if(own){
+      h+='<div class="btn-row"><button class="btn '+(cur?'dark':'green')+'" data-act="recPick" data-id="'+r.id+'" '+(cur?'disabled':'')+'>'+(cur?'Выбран для варки':'Выбрать для варки')+'</button></div>';
+    }else{
+      var lr=S.lab<r.labReq,nc=S.cry<r.unlock;
+      h+='<div class="btn-row"><button class="btn blue" data-act="recUnlock" data-id="'+r.id+'" '+((lr||nc)?'disabled':'')+'>'+ic('crystal')+'Открыть за '+r.unlock+'</button></div>'+
+      ((lr||nc)?'<div class="hint" style="color:#ff9a80">'+(lr?'Нужна лаборатория ур.'+r.labReq+'. ':'')+(nc?'Не хватает кристаллов.':'')+'</div>':'');
+    }
+    h+='</div>';
+  });
+  return h;
+}
+
+/* ---------- УЛУЧШЕНИЯ ---------- */
+function rUpg(){
+  var h='<div class="sec">Локации</div>';
+  LABS.forEach(function(L){
+    var own=L.id<=S.lab,cur=L.id===S.lab,next=L.id===S.lab+1;
+    h+='<div class="card">'+(own?'':'')+'<div class="chead">'+ic(L.icon)+'<div style="flex:1"><b>'+L.id+'. '+L.name+'</b><small>'+L.desc+'</small></div>'+(cur?'<span class="tagr cur">Здесь</span>':(own?'<span class="tagr">Куплено</span>':''))+'</div>'+
+    '<div class="stats">'+L.fx.map(function(f){return '<span class="pill">'+f+'</span>';}).join('')+'</div>';
+    if(next){
+      var ok=S.cash>=L.cost&&S.cry>=L.cry;
+      h+='<div class="btn-row"><button class="btn green" data-act="buyLab" data-id="'+L.id+'" '+(ok?'':'disabled')+'>'+ic('up')+'Переехать: $'+money(L.cost)+(L.cry?' + '+L.cry+' кр.':'')+'</button></div>';
+    }else if(!own){
+      h+='<div class="hint">Сначала откройте предыдущую локацию.</div>';
+    }
+    h+='</div>';
+  });
+  h+='<div class="sec">Оборудование</div>';
+  EQUIP.forEach(function(e){
+    var l=eq(e.id),max=l>=5,cost=eqCost(e,l),pips='';
+    for(var i=0;i<5;i++)pips+='<i class="'+(i<l?'f':'')+'"></i>';
+    h+='<div class="card"><div class="chead">'+ic(e.icon)+'<div style="flex:1"><b>'+e.name+'</b><small>'+e.desc+'</small></div></div><div class="pips">'+pips+'</div>'+
+    '<div class="hint" style="text-align:left;margin:0 0 .3em">Сейчас: '+(l?e.eff(l):'нет эффекта')+(max?'':' &rarr; '+e.eff(l+1))+'</div>'+
+    '<button class="btn '+(max?'dark':'sand')+' sm" data-act="buyEq" data-id="'+e.id+'" '+((max||S.cash<cost)?'disabled':'')+'>'+(max?'Максимум':ic('plus')+'Улучшить $'+money(cost))+'</button></div>';
+  });
+  h+='<div class="sec">Уникальные технологии</div>';
+  TECH.forEach(function(t){
+    var own=hasT(t.id);
+    h+='<div class="card"><div class="chead">'+ic(t.icon)+'<div style="flex:1"><b>'+t.name+'</b><small>'+t.desc+'</small></div>'+(own?'<span class="tagr">Изучено</span>':'')+'</div>'+
+    (own?'':'<div class="btn-row"><button class="btn blue" data-act="buyTech" data-id="'+t.id+'" '+(S.cry<t.cost?'disabled':'')+'>'+ic('crystal')+'Изучить за '+t.cost+'</button></div>')+'</div>';
+  });
+  return h;
+}
+
+/* ============================================================
+   ЖИВЫЕ ОБНОВЛЕНИЯ (без перерисовки)
+   ============================================================ */
+function updateLive(){
+  updateHud();
+  var now=Date.now();
+  if(view==='lab'){
+    var b=document.getElementById('btn-low');
+    if(b){
+      var low=S.low>now;
+      var t=tr(low?'Лежим на дне: '+Math.ceil((S.low-now)/1000)+' с':'Залечь на дно');
+      if(b.textContent!==t)b.innerHTML=ic('clock')+t;
+      b.disabled=low;
+    }
+    setT('bribe-c',money(bribeCost()));setT('negot-c',money(negotCost()));
+    var am=document.getElementById('auto-msg'),amt=tr(S.auto.msg||'');if(am&&am.textContent!==amt)am.textContent=amt;
+  }
+  if(view==='market'){
+    CH.forEach(function(c){
+      var el=document.querySelector('[data-dem="'+c.id+'"]');
+      if(el){var mx=chMax(c),d=Math.floor(S.ch.dem[c.id]||0);el.style.width=(d/mx*100)+'%';var tt=document.querySelector('[data-demt="'+c.id+'"]');if(tt)tt.textContent=d+'/'+mx;}
+      var bl=document.querySelector('[data-blk="'+c.id+'"]');
+      if(bl){var left=Math.ceil((S.block[c.id]-now)/1000);if(left<=0)refresh();else bl.textContent=left;}
+    });
+    var prs=document.querySelectorAll('[data-pr]');
+    for(var i=0;i<prs.length;i++){
+      var p=prs[i].dataset.pr.split('|'),cc=CH[+p[0]],rid=+p[1],s=S.stock[rid];
+      if(s)prs[i].textContent=unitPrice(rid,s.p,cc).toFixed(1);
+    }
+    var ips=document.querySelectorAll('[data-ip]');
+    for(var j=0;j<ips.length;j++)ips[j].textContent=ingPrice(ips[j].dataset.ip);
+  }
+}
+
+/* ============================================================
+   ДЕЙСТВИЯ ИГРОКА: продажа, покупки
+   ============================================================ */
+function saleHeat(c,q){
+  var h=c.heat*q*(hasT('false')?0.7:1);
+  if(c.id===4)h*=(1-0.1*eq('logi'));
+  addHeat(h);addCart(q*0.07*(c.id>=3?1.3:1));
+}
+function doSell(cid,rid,max,quiet){
+  var c=CH[cid],now=Date.now();
+  if(S.ch.unl.indexOf(cid)<0)return null;
+  if(S.low>now){if(!quiet)toast('Вы лежите на дне','bad');return null;}
+  if(S.block[cid]>now){if(!quiet)toast('Канал захвачен картелем','bad');return null;}
+  var s=S.stock[rid];if(!s||s.q<1)return null;
+  if(s.p<c.minP){if(!quiet)toast('Нужна чистота от '+c.minP+'%','bad');return null;}
+  var dem=S.ch.dem[cid]||0;
+  var q=Math.min(Math.floor(s.q),Math.floor(dem),max===undefined?1e9:max);
+  if(q<1){if(!quiet)toast('Спрос исчерпан — подождите','bad');return null;}
+  var rev=Math.round(q*unitPrice(rid,s.p,c));
+  S.cash+=rev;S.st.earn+=rev;s.q-=q;
+  if(s.q<1)delete S.stock[rid];
+  S.ch.dem[cid]=Math.max(0,dem-q);
+  saleHeat(c,q);
+  return {q:q,rev:rev};
+}
+function sellOneBest(cid){
+  var c=CH[cid],best=-1,bv=0;
+  for(var k in S.stock){if(S.stock[k].q>=1){var v=unitPrice(+k,S.stock[k].p,c);if(v>bv){bv=v;best=+k;}}}
+  if(best<0)return false;
+  var s=S.stock[best];s.q-=1;if(s.q<1)delete S.stock[best];
+  var rev=Math.round(bv);S.cash+=rev;S.st.earn+=rev;saleHeat(c,1);
+  return true;
+}
+
+/* ============================================================
+   ВРАГИ: облава, картель, события
+   ============================================================ */
+function raid(){sfx('raid');
+  if(S.lawyer>0){S.lawyer--;S.heat=30;S.st.raids++;save();openModal({t:'Облава отбита',x:'Адвокат разобрался с инспекторами: штрафа и конфискации нет. Внимание сброшено до 30%. Адвокатов осталось: <b>'+S.lawyer+'</b>.',btns:[{l:'Отлично',cls:'green',fn:refresh}]});return;}
+  if(escBusy)return;
+  if(!escMode){escMode=1;openModal({t:'Облава!',x:'Инспекторы у двери. Можно попытаться быстро убрать улики и скрыться.',btns:[{l:'Бежать!',cls:'green',fn:startEscape},{l:'Сдаться',cls:'rust',fn:function(){raid();}}]});return;}
+  var esc=escMode===2;escMode=0;
+  var L=lab(),mit=L.raid,sm=(hasT('stock')?0.5:1)*(esc?0.2:1);
+  var lossF=0.45*(1-mit)*sm,fine=Math.floor(S.cash*0.2*(1-mit)*(esc?0.2:1)),lost=0;
+  for(var k in S.stock){var s=S.stock[k],l=Math.floor(s.q*lossF);s.q-=l;lost+=l;if(s.q<1)delete S.stock[k];}
+  S.cash-=fine;S.heat=30;S.st.raids++;
+  save();
+  openModal({t:'Облава ГОСТ-инспекции',x:(esc?'Вы успели убрать почти все улики. ':'')+'Инспекторы нагрянули в лабораторию. Штраф: <b>$'+money(fine)+'</b>. Конфисковано карамели: <b>'+lost+' шт.</b> Внимание сброшено до 30%.',btns:[{l:'Принять к сведению',cls:'rust',fn:refresh}]});
+}
+function cartelHit(){sfx('hit');
+  var g=eq('guard'),cands=S.ch.unl.slice();
+  var cid=cands[Math.floor(Math.random()*cands.length)];
+  var secs=Math.round(90*(1-0.15*g)),steal=Math.floor(S.cash*0.12*(1-0.17*g));
+  S.block[cid]=Date.now()+secs*1000;S.cash-=steal;S.cart=30;S.st.hits++;
+  save();
+  openModal({t:'Картель отжал район',x:'Кондитерский картель захватил канал «'+CH[cid].name+'» на <b>'+secs+' с</b> и вытряс из вас <b>$'+money(steal)+'</b>. Усильте охрану или ведите переговоры.',btns:[{l:'Понял',cls:'rust',fn:refresh}]});
+}
+function checkThreats(){
+  if(modalOpen)return;
+  if(S.heat>=100)raid();
+  else if(S.cart>=100)cartelHit();
+}
+
+function evCost(m){return Math.round(Math.max(120,Math.min(S.cash*0.1,9000))*m*bribeMul());}
+function bestStockId(){var b=-1,bv=-1;for(var k in S.stock){var v=REC[k].price*S.stock[k].p;if(v>bv){bv=v;b=+k;}}return b;}
+function takeUnits(n){
+  var got=0,rev=0;
+  while(got<n){
+    var b=bestStockId();if(b<0)break;
+    var s=S.stock[b],t=Math.min(Math.floor(s.q),n-got);if(t<1){delete S.stock[b];continue;}
+    rev+=t*REC[b].price*pm(s.p);s.q-=t;got+=t;if(s.q<1)delete S.stock[b];
+  }
+  return {n:got,rev:rev};
+}
+function mkEvents(){
+  return [
+   {t:'Инспектор у двери',x:'Инспектор ГОСТ принюхивается у входа и просит предъявить «документы на кондитерскую».',o:[
+     {l:'Откупиться',m:1,run:function(){addHeat(-20);return 'Конверт ушёл по назначению. Внимание инспекции -20%.';}},
+     {l:'Сменить локацию',m:0.5,run:function(){S.low=Date.now()+20000;addHeat(-10);return 'Вы свернули производство и затаились на 20 секунд. Внимание -10%.';}},
+     {l:'Замаскировать под пекарню',m:0.4,run:function(){if(Math.random()<0.6){addHeat(-25);return 'Булочки сработали! Внимание -25%.';}addHeat(15);return 'Инспектор не поверил в «пекарню без муки». Внимание +15%.';}}]},
+   {t:'Жалоба соседей на запах',x:'Кто-то написал анонимный донос: из вашего здания пахнет жжёным сахаром.',o:[
+     {l:'Заплатить за «ремонт вентиляции»',m:0.8,run:function(){addHeat(-15);return 'Соседи довольны, донос забрали. Внимание -15%.';}},
+     {l:'Угостить соседей (-6 шт. товара)',m:0,need:function(){return stockTotal()>=6?'':'Мало товара';},run:function(){takeUnits(6);addHeat(-12);return 'Бесплатные леденцы сделали из соседей союзников. Внимание -12%.';}},
+     {l:'Проигнорировать',m:0,run:function(){if(Math.random()<0.5)return 'Обошлось. Донос затерялся в бумагах.';addHeat(22);return 'Донос дошёл до инспекции. Внимание +22%.';}}]},
+   {t:'Налоговый аудит «кондитерской»',x:'Проверяющий хочет увидеть бухгалтерию вашей несуществующей фабрики конфет.',o:[
+     {l:'Липовая накладная',m:1,run:function(){addHeat(-8);return 'Бумаги выглядят убедительно. Внимание -8%.';}},
+     {l:'Дать на лапу за «чистую репутацию»',m:1.5,run:function(){addHeat(-10);S.cry+=2;return 'Ваше имя теперь в «белом списке». Внимание -10%, +2 кристалла.';}},
+     {l:'Сбежать через чёрный ход',m:0,run:function(){S.low=Date.now()+25000;addHeat(5);return 'Вы ушли огородами и залегли на 25 секунд. Внимание +5%.';}}]},
+   {t:'Картель предлагает «защиту»',x:'Двое в одинаковых куртках предлагают «крышу» за скромную плату.',o:[
+     {l:'Заплатить',m:1.2,run:function(){S.cart=Math.max(0,S.cart-35);return 'Договорились. Давление картелей -35%.';}},
+     {l:'Отказаться',m:0,run:function(){if(Math.random()<0.4)return 'Они ушли ни с чем. Пока.';S.cart=Math.min(99,S.cart+15);return 'Они запомнили ваше лицо. Давление +15%.';}},
+     {l:'Позвать охрану',m:0,need:function(){return eq('guard')>=1?'':'Нужна охрана';},run:function(){S.cart=Math.max(0,S.cart-20);return 'Охрана вежливо объяснила гостям выход. Давление -20%.';}}]},
+   {t:'Свидетель видел фургон',x:'Прохожий заметил, как вы таскаете мешки с сахаром среди ночи, и запоминает номера.',o:[
+     {l:'Сменить локацию',m:0.6,run:function(){S.low=Date.now()+25000;addHeat(-20);return 'Вы перегнали технику на новое место. Внимание -20%.';}},
+     {l:'Откупиться от свидетеля',m:1,run:function(){addHeat(-25);return 'Свидетель вдруг всё забыл. Внимание -25%.';}},
+     {l:'Выдать за доставку выпечки',m:0.3,run:function(){if(Math.random()<0.5){addHeat(-20);return 'Фургон «Свежий хлеб» — идеальное прикрытие. Внимание -20%.';}addHeat(20);return 'Свидетель заметил, что хлеб пахнет мятой. Внимание +20%.';}}]},
+   {t:'VIP-заказ от клуба',x:'Владелец клуба хочет закупить 10 шт. лучшей карамели по повышенной цене.',vip:true,o:[
+     {l:'Принять заказ (x1.8)',m:0,run:function(){var t=takeUnits(10),rev=Math.round(t.rev*1.8);S.cash+=rev;S.st.earn+=rev;addHeat(6);return 'Продано '+t.n+' шт. за $'+money(rev)+'. Внимание +6%.';}},
+     {l:'Поторговаться (x2.4 или срыв)',m:0,run:function(){if(Math.random()<0.5){var t=takeUnits(10),rev=Math.round(t.rev*2.4);S.cash+=rev;S.st.earn+=rev;addHeat(6);return 'Клиент сдался! Продано '+t.n+' шт. за $'+money(rev)+'.';}return 'Клиент ушёл к конкурентам. Сделка сорвана.';}},
+     {l:'Отказаться',m:0,run:function(){return 'Вы не любите рисковать. Заказ ушёл в другие руки.';}}]},
+   {t:'Сахар со скидкой',x:'Знакомый оптовик предлагает мешки сахара вдвое дешевле. Подозрительно, но выгодно.',o:[
+     {l:'Взять 15 ед. сахара',m:0.3,run:function(){S.ing.sugar=(S.ing.sugar||0)+15;return 'Склад пополнен: +15 сахара.';}},
+     {l:'Торговаться за 30 ед.',m:0.3,run:function(){if(Math.random()<0.5){S.ing.sugar=(S.ing.sugar||0)+30;return 'Удалось! +30 сахара.';}addHeat(8);return 'Оптовик оказался подставным. Внимание +8%.';}},
+     {l:'Пройти мимо',m:0,run:function(){return 'Бесплатный сыр бывает только в мышеловке.';}}]},
+   {t:'Санэпидемстанция',x:'Приехала внеплановая проверка: ищут нарушения санитарных норм.',o:[
+     {l:'Показать «чистые» цеха',m:0.8,run:function(){addHeat(-12);return 'Акт подписан без замечаний. Внимание -12%.';}},
+     {l:'Сказать, что это ремонт',m:0,run:function(){if(Math.random()<0.5){addHeat(-8);return 'Проверяющие ушли, сославшись на ремонт. Внимание -8%.';}addHeat(14);return 'Ремонт не убедил. Внимание +14%.';}},
+     {l:'Угостить проверяющих (-5 шт.)',m:0,need:function(){return stockTotal()>=5?'':'Мало товара';},run:function(){takeUnits(5);addHeat(-15);S.cry+=1;return 'Сладкая взятка сработала. Внимание -15%, +1 кристалл.';}}]},
+   {t:'Блогер-дегустатор',x:'Известный блогер хочет снять обзор на вашу карамель.',o:[
+     {l:'Дать образцы',m:0.5,run:function(){if(Math.random()<0.65){S.cry+=2;S.cash+=Math.round(S.cash*0.05);return 'Обзор взорвал сеть! +2 кристалла и бонус к выручке.';}addHeat(12);return 'Блогер спросил про лицензию. Внимание +12%.';}},
+     {l:'Отказаться',m:0,run:function(){return 'Вы остались в тени. Спокойнее.';}}]},
+   {t:'Конкурент демпингует',x:'Другой подпольный химик сбивает цены на вашу карамель.',o:[
+     {l:'Договориться о разделе рынка',m:1.3,run:function(){return 'Вы поделили районы. Цены не пострадали.';}},
+     {l:'Переманить его клиентов',m:0.8,run:function(){if(Math.random()<0.55){S.cry+=2;return 'Клиенты перешли к вам! +2 кристалла.';}S.cmpEnd=Date.now()+150000;return 'Не вышло: цены -15% на 150 секунд.';}},
+     {l:'Сдать конкурента инспекции',m:0,run:function(){if(Math.random()<0.5){addHeat(-10);return 'Конкурента увезли. Внимание -10%.';}addHeat(15);S.cmpEnd=Date.now()+120000;return 'Инспекция заинтересовалась и вами: внимание +15%, цены -15% на 120 с.';}},
+     {l:'Ничего не делать',m:0,run:function(){S.cmpEnd=Date.now()+180000;return 'Цены просели на 15% на 3 минуты.';}}]}
+  ];
+}
+function triggerEvent(){sfx('ping');
+  var evs=mkEvents().filter(function(e){return !e.vip||stockTotal()>=10;});
+  var ev=evs[Math.floor(Math.random()*evs.length)];
+  var btns=ev.o.map(function(o){
+    var cost=o.m?evCost(o.m):0,why=o.need?o.need():'',dis=!!why||S.cash<cost;
+    return {l:o.l+(cost?' ($'+money(cost)+')':'')+(why?' — '+why:''),cls:dis?'dark':'sand',dis:dis,fn:function(){
+      S.cash-=cost;var res=o.run();save();refresh();
+      openModal({t:ev.t,x:res,btns:[{l:'Ок',cls:'green',fn:refresh}]});
+    }};
+  });
+  openModal({t:ev.t,x:ev.x,btns:btns});
+}
+
+/* ============================================================
+   ТИК ИГРЫ (пассивные процессы)
+   ============================================================ */
+function autoBrew(){
+  var r=REC[S.sel],pots=maxPots();
+  for(var i=0;i<ING.length;i++){if((S.ing[ING[i].id]||0)<(r.cost[ING[i].id]||0)*pots){S.auto.msg='Автоварка ждёт ингредиенты.';return;}}
+  ING.forEach(function(g){S.ing[g.id]-=(r.cost[g.id]||0)*pots;});
+  var p=Math.min(92,72+2.5*eq('thermo')+(hasT('syrup')?3:0));
+  var units=unitsPerPot()*pots;
+  addStock(r.id,units,Math.round(p*10)/10);addHeat(r.smell*smellMul()*Math.sqrt(pots)*0.17*12);
+  S.st.batches++;S.st.units+=units;S.auto.msg='Автоварка: +'+units+' шт. «'+r.name+'», чистота '+p.toFixed(1)+'%.';
+}
+function tick(dt,off){
+  var now=Date.now(),lowing=S.low>now;
+  S.heat=Math.max(0,S.heat-heatDecay()*(lowing?10:1)*dt);
+  S.cart=Math.min(100,S.cart+0.025*dt*(1-0.15*eq('guard'))*(hasT('diplomat')?0.6:1)*(S.ch.unl.length>1?1:0.4));
+  CH.forEach(function(c){
+    if(c.passive||S.ch.unl.indexOf(c.id)<0)return;
+    S.ch.dem[c.id]=Math.min(chMax(c),(S.ch.dem[c.id]||0)+c.regen*dt);
+  });
+  if(S.ch.mach>0&&S.ch.unl.indexOf(2)>=0&&!lowing&&!(S.block[2]>now)){
+    S.ch.macc=(S.ch.macc||0)+S.ch.mach*dt/5;
+    var g=0;
+    while(S.ch.macc>=1&&g++<500){if(!sellOneBest(2)){S.ch.macc=Math.min(S.ch.macc,1);break;}S.ch.macc-=1;}
+  }
+  if(lab().auto&&S.auto.on&&!lowing){
+    S.auto.t+=dt;
+    if(S.auto.t>=22*brewSpeed()){S.auto.t=0;autoBrew();}
+  }
+  if(off){S.heat=Math.min(S.heat,95);S.cart=Math.min(S.cart,95);}
+}
+function catchUp(sec){
+  var el=Math.min(sec,900),steps=Math.min(180,Math.max(1,Math.ceil(el/5)));
+  for(var i=0;i<steps;i++)tick(el/steps,true);
+}
+
+/* ============================================================
+   ВАРКА: ТАЙМИНГ-МИНИИГРА
+   ============================================================ */
+var B=null,rafId=0,lastF=0;
+function zc(t){return 52+17*Math.sin(t*0.5+1)+8*Math.sin(t*1.25+0.4);}
+function startBrew(){
+  var r=REC[S.sel],pots=Math.min(S.pots,maxPots());
+  if(S.low>Date.now()){toast('Вы лежите на дне. Подождите.','bad');return;}
+  for(var i=0;i<ING.length;i++){
+    if((S.ing[ING[i].id]||0)<(r.cost[ING[i].id]||0)*pots){toast('Не хватает: '+ING[i].short,'bad');return;}
+  }
+  ING.forEach(function(g){S.ing[g.id]-=(r.cost[g.id]||0)*pots;});
+  var dur=Math.max(10,(15+r.id*1.7)*brewSpeed());
+  var ings=ING.filter(function(g){return r.cost[g.id];}),n=ings.length,win=Math.max(1.9,2.7-0.09*r.id);
+  var ev=ings.map(function(g,k){return {ing:g,t0:dur*(0.08+0.7*(n>1?k/(n-1):0.3)),win:win,res:null};});
+  var lastEnd=ev[ev.length-1].t0+win+0.5;
+  dur=Math.max(dur,lastEnd);
+  B={rid:r.id,pots:pots,dur:dur,t:0,T:zc(0),v:0,hold:false,tz:0,tn:0,ev:ev,cur:-1,fb:0,fbTxt:'',fbc:'',paused:false,done:false,cs:1,c:zc(0),res:null,night:S.bm==='night',exp:S.bm==='exp',useCool:!!S.bc,sm:1+0.1*Math.min(S.pst||0,5),cd:null};
+  buildBrewDom();show('brew');save();sfx('start');
+  lastF=performance.now();cancelAnimationFrame(rafId);rafId=requestAnimationFrame(brewLoop);
+}
+function buildBrewDom(){
+  var r=REC[B.rid];
+  var q=B.ev.map(function(e,i){return '<div class="qi" id="qi'+i+'">'+ic(e.ing.icon)+e.ing.short+'</div>';}).join('');
+  var bubs='<circle class="bub" cx="120" cy="82" r="4" fill="#fff" opacity=".7"/><circle class="bub" cx="150" cy="84" r="5" fill="#fff" opacity=".7"/><circle class="bub" cx="180" cy="82" r="3.5" fill="#fff" opacity=".7"/><circle class="bub" cx="205" cy="85" r="4.5" fill="#fff" opacity=".7"/><circle class="bub" cx="135" cy="86" r="3" fill="#fff" opacity=".7"/><circle class="bub" cx="165" cy="80" r="3.5" fill="#fff" opacity=".7"/>';
+  var flames='';
+  for(var i=0;i<6;i++){var x=102+i*23;flames+='<path class="fl" d="M'+x+' 176 C'+(x-8)+' 164 '+(x+2)+' 160 '+x+' 148 C'+(x+4)+' 156 '+(x+12)+' 162 '+(x+8)+' 176Z" fill="'+(i%2?'#ffb22e':'#ff6a1e')+'"/>';}
+  var scene='<svg viewBox="0 0 320 190" preserveAspectRatio="xMidYMid meet">'+
+    '<defs><linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a6a66"/><stop offset=".35" stop-color="#cfcfc8"/><stop offset="1" stop-color="#55554f"/></linearGradient>'+
+    '<linearGradient id="syr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--s1)"/><stop offset="1" style="stop-color:var(--s2)"/></linearGradient></defs>'+
+    '<rect x="0" y="0" width="320" height="190" fill="#00000000"/>'+
+    '<rect x="60" y="176" width="200" height="14" rx="4" fill="#3a3a38" stroke="#111" stroke-width="2"/>'+
+    '<g id="flames">'+flames+'</g>'+
+    '<rect x="64" y="94" width="20" height="9" rx="4" fill="#44443f"/><rect x="236" y="94" width="20" height="9" rx="4" fill="#44443f"/>'+
+    '<path d="M78 82 H242 V136 Q242 152 222 152 H98 Q78 152 78 136Z" fill="url(#steel)" stroke="#222" stroke-width="2.5"/>'+
+    '<ellipse cx="160" cy="82" rx="82" ry="14" fill="#8d8a80" stroke="#222" stroke-width="2.5"/>'+
+    '<ellipse cx="160" cy="84" rx="74" ry="10" fill="url(#syr)"/>'+bubs+
+    '<g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path class="steam" d="M120 70c-6-8 6-12 0-22"/><path class="steam" d="M160 70c-6-8 6-12 0-22"/><path class="steam" d="M200 70c-6-8 6-12 0-22"/></g>'+
+    '<rect x="238" y="30" width="7" height="50" rx="3.5" fill="#e8e4d8" stroke="#222" stroke-width="1.5"/><rect id="th-fill" x="239.5" y="50" width="4" height="28" rx="2" fill="#d6392b"/>'+
+    '</svg>';
+  var h=
+   '<div class="b-top"><button class="btn dark sm" data-act="brewAbort">'+ic('back')+'Прервать</button><div class="b-title">'+r.name+'<br><small style="color:#c9b27c;font-size:.75em">Котлов: '+B.pots+'</small></div></div>'+
+   '<div class="b-prog"><i id="b-prog"></i></div>'+
+   '<div class="queue">'+q+'</div>'+
+   '<div class="scene" id="b-scene" style="--s1:'+r.cols[0]+';--s2:'+r.cols[1]+'">'+scene+'</div>'+
+   '<div class="g-wrap"><div class="g-l"><span>Температура сиропа</span><b id="b-ctl">100%</b></div><div class="gauge"><i class="zone" id="b-zone"></i><i class="mk" id="b-mk"></i></div></div>'+
+   '<div class="ring-box"><svg viewBox="0 0 160 160"><circle class="tg" cx="80" cy="80" r="22"/><circle class="rg" id="b-ringc" cx="80" cy="80" r="70" style="visibility:hidden"/><use id="b-ico" href="#i-sugar" x="66" y="66" width="28" height="28" style="color:#fff;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/></svg>'+
+   '<div class="r-txt"><small id="b-hint-s">Следующее</small><b id="b-hint">...</b><span class="fb" id="b-fb"></span></div></div>'+
+   '<div class="b-btns"><button class="big heat" id="b-heat">'+ic('fire')+'Греть (держать)</button><button class="big add" id="b-add">'+ic('drop')+'Высыпать</button></div>'+
+   '<div class="pause" id="b-pause">'+ic('clock','xl')+'Пауза<button class="btn green" data-act="brewResume">Продолжить</button></div>'+
+   '<div class="result" id="b-result"></div>';
+  $('#screen-brew').innerHTML=tr(h);
+  if(B.night)document.getElementById('b-scene').classList.add('night');
+  var hb=document.getElementById('b-heat'),ab=document.getElementById('b-add');
+  function on(e){e.preventDefault();B&&(B.hold=true);hb.classList.add('hold');try{hb.setPointerCapture(e.pointerId);}catch(x){}}
+  function off(e){if(e)e.preventDefault();B&&(B.hold=false);hb.classList.remove('hold');}
+  hb.addEventListener('pointerdown',on);hb.addEventListener('pointerup',off);hb.addEventListener('pointercancel',off);hb.addEventListener('lostpointercapture',off);
+  hb.addEventListener('contextmenu',function(e){e.preventDefault();});
+  ab.addEventListener('pointerdown',function(e){e.preventDefault();brewAdd();});
+  ab.addEventListener('contextmenu',function(e){e.preventDefault();});
+}
+function brewAdd(){
+  if(!B||B.paused||B.done)return;
+  if(B.cd){coolPour();return;}
+  if(B.cur<0){B.fb=0.7;B.fbTxt='РАНО';B.fbc='miss';sfx('miss');return;}
+  var e=B.ev[B.cur],p=(B.t-e.t0)/e.win,R=lerp(70,22,clamp(p,0,1)),err=Math.abs(R-22),s,txt,cl;
+  if(err<=8){s=1;txt='ИДЕАЛЬНО';cl='perf';}
+  else if(err<=16){s=0.75;txt='ХОРОШО';cl='good';}
+  else if(err<=28){s=0.4;txt='СЛАБО';cl='ok';}
+  else{s=0.15;txt='СЛИШКОМ РАНО';cl='miss';}
+  e.res=s;e.cls=cl;B.fb=0.9;B.fbTxt=txt;B.fbc=cl;B.cur=-1;sfx(cl==='perf'?'perf':cl==='good'?'good':cl==='ok'?'weak':'miss');
+}
+function brewLoop(now){
+  if(!B)return;
+  sndHeat(!!(B.hold&&!B.paused&&!B.done));
+  var dt=Math.min(0.05,(now-lastF)/1000);lastF=now;
+  if(!B.paused&&!B.done&&B.cd){coolStep(dt);}
+  else if(!B.paused&&!B.done){
+    B.t+=dt;
+    var c=zc(B.t),wob=7*Math.sin(B.t*2.3)+4*Math.sin(B.t*3.9+1);
+    var target=(B.hold?36:-26)+wob;
+    B.v+=(target-B.v)*Math.min(1,4*dt);
+    B.T+=B.v*dt;
+    if(B.T<0){B.T=0;B.v=0;}if(B.T>100){B.T=100;B.v=0;}
+    var W=zoneW(),d=Math.abs(B.T-c);
+    var sc=d<=W/2?1:(d<=W?0.35*(1-(d-W/2)/(W/2)):0);
+    B.tz+=sc*dt;B.tn+=dt;B.cs=sc;B.c=c;
+    addHeat(REC[B.rid].smell*smellMul()*Math.sqrt(B.pots)*0.17*dt*(B.night?0.5:1));
+    B.cur=-1;
+    for(var i=0;i<B.ev.length;i++){
+      var e=B.ev[i];
+      if(e.res===null){
+        if(B.t>=e.t0&&B.t<e.t0+e.win)B.cur=i;
+        else if(B.t>=e.t0+e.win){e.res=0;e.cls='miss';B.fb=0.9;B.fbTxt='ПРОПУЩЕНО';B.fbc='miss';sfx('miss');}
+      }
+    }
+    if(B.cur>=0&&B.cur!==B.lc)sfx('cue');B.lc=B.cur;
+    if(B.fb>0)B.fb-=dt;
+    var allDone=B.ev.every(function(x){return x.res!==null;});
+    if(B.t>=B.dur&&allDone){if(B.useCool&&!B.cd)startCool();else finishBrew();}
+  }
+  drawBrew();
+  if(B&&!B.done)rafId=requestAnimationFrame(brewLoop);
+}
+function drawBrew(){
+  var W=zoneW(),cc=B.c;
+  var zone=document.getElementById('b-zone');if(!zone)return;
+  zone.style.left=clamp(cc-W/2,0,100)+'%';zone.style.width=(Math.min(100,cc+W/2)-clamp(cc-W/2,0,100))+'%';
+  document.getElementById('b-mk').style.left=B.T+'%';
+  document.getElementById('b-prog').style.width=clamp(B.t/B.dur*100,0,100)+'%';
+  setT('b-ctl',(B.tn>0?Math.round(B.tz/B.tn*100):100)+'%');
+  var fl=document.getElementById('flames');if(fl)fl.parentNode.classList.toggle('hotf',B.hold);
+  var scn=document.getElementById('b-scene');if(scn)scn.classList.toggle('hotf',B.hold);
+  var tf=document.getElementById('th-fill');if(tf){var hh=6+B.T*0.4;tf.setAttribute('y',(78-hh).toFixed(1));tf.setAttribute('height',hh.toFixed(1));}
+  B.ev.forEach(function(e,i){
+    var q=document.getElementById('qi'+i);if(!q)return;
+    var cl='qi';
+    if(e.res!==null)cl+=' '+(e.cls||'miss');else if(B.cur===i)cl+=' cur';
+    if(q.className!==cl)q.className=cl;
+  });
+  var ring=document.getElementById('b-ringc'),ico=document.getElementById('b-ico');
+  if(B.cur>=0){
+    var e=B.ev[B.cur],p=clamp((B.t-e.t0)/e.win,0,1);
+    ring.style.visibility='visible';ring.setAttribute('r',lerp(70,22,p).toFixed(1));
+    ico.setAttribute('href','#i-'+e.ing.icon);
+    setT('b-hint-s','Добавь сейчас');setT('b-hint',e.ing.name);
+  }else{
+    ring.style.visibility='hidden';
+    var nx=null;for(var i=0;i<B.ev.length;i++)if(B.ev[i].res===null){nx=B.ev[i];break;}
+    setT('b-hint-s',nx?'Следующее':'Готово');setT('b-hint',nx?nx.ing.name+' через '+Math.max(0,Math.ceil(nx.t0-B.t))+' с':'Держи температуру до конца');
+    if(nx)ico.setAttribute('href','#i-'+nx.ing.icon);
+  }
+  var fb=document.getElementById('b-fb');
+  if(fb){var t=B.fb>0?tr(B.fbTxt):'';if(fb.textContent!==t)fb.textContent=t;var k='fb '+(B.fb>0?B.fbc:'');if(fb.className!==k)fb.className=k;}
+  if(B.cd&&!B.done){
+    ring.style.visibility=B.cd.res===null?'visible':'hidden';ring.setAttribute('r',lerp(70,22,clamp(B.cd.t/B.cd.len,0,1)).toFixed(1));
+    setT('b-hint-s',B.cd.res===null?'Охлаждение':'Готово');setT('b-hint',B.cd.res===null?'Перелей в форму':'Застывает...');
+  }
+  var pz=document.getElementById('b-pause');if(pz)pz.classList.toggle('on',B.paused&&!modalOpen&&!B.done);
+}
+function startCool(){B.cd={t:0,len:3.2,res:null,w:0};B.cur=-1;B.fb=0.9;B.fbTxt='ОХЛАЖДЕНИЕ';B.fbc='good';sfx('cue');}
+function coolPour(){
+  var c=B.cd;if(c.res!==null)return;
+  var R=lerp(70,22,clamp(c.t/c.len,0,1)),err=Math.abs(R-22),s,txt,cl;
+  if(err<=8){s=1;txt='ИДЕАЛЬНО';cl='perf';}else if(err<=16){s=0.75;txt='ХОРОШО';cl='good';}else if(err<=28){s=0.4;txt='СЛАБО';cl='ok';}else{s=0.15;txt='СЛИШКОМ РАНО';cl='miss';}
+  c.res=s;B.fb=0.9;B.fbTxt=txt;B.fbc=cl;sfx(cl==='perf'?'perf':cl==='good'?'good':'miss');
+}
+function coolStep(dt){
+  var c=B.cd;if(B.fb>0)B.fb-=dt;
+  if(c.res===null){c.t+=dt;if(c.t>=c.len){c.res=0.1;B.fb=0.9;B.fbTxt='НЕ УСПЕЛ';B.fbc='miss';sfx('miss');}}
+  else{c.w+=dt;if(c.w>=0.7)finishBrew();}
+}
+function finishBrew(){
+  B.done=true;
+  var r=REC[B.rid];
+  var tS=B.tn>0?B.tz/B.tn:0;
+  var aS=B.ev.length?B.ev.reduce(function(a,e){return a+e.res;},0)/B.ev.length:1;
+  var raw=0.55*tS+0.45*aS;
+  var s=clamp(raw+0.02*eq('thermo')+(hasT('syrup')?0.03:0),0,1);
+  var pureR=!!r.pure,purity=Math.round(Math.min(pureR?100:99.1,50+(pureR?50:49.1)*s)*10)/10;
+  var xm=1,note='',xc=0,xr=Math.random();
+  if(B.exp){
+    if(xr<0.12){xm=0.5;note='Эксперимент провалился: партия испорчена (x0.5).';}
+    else if(xr<0.72){note='Эксперимент: без сюрпризов.';}
+    else if(xr<0.92){xm=1.4;note='Удачная пропорция! Выход x1.4.';}
+    else{xm=1.4;xc=3+r.id;note='Открытие! Выход x1.4 и +'+xc+' кристаллов.';}
+  }
+  var cm2=B.cd&&B.cd.res!==null?0.75+0.4*B.cd.res:1;
+  if(B.cd)note+=(note?' ':'')+'Охлаждение: x'+cm2.toFixed(2)+' к выходу.';
+  var units=Math.max(1,Math.round(unitsPerPot()*B.pots*B.sm*xm*cm2));
+  if(B.sm>1)note+=(note?' ':'')+'Серия x'+B.sm.toFixed(1)+'.';
+  S.pst=purity>=95?Math.min((S.pst||0)+1,5):0;
+  addStock(B.rid,units,purity);
+  var cry=Math.max(0,Math.floor(((purity-60)/6)*(0.6+0.25*r.id)*(0.7+0.3*B.pots)));
+  cry+=xc;S.cry+=cry;S.st.batches++;S.st.units+=units;S.st.best=Math.max(S.st.best,purity);
+  B.res={purity:purity,units:units,cry:cry,tS:tS,aS:aS,note:note};
+  save();drawBrew();sndHeat(false);sfx(purity>=90?'win2':'win');showBrewResult();
+}
+function showBrewResult(){
+  var R=B.res,r=REC[B.rid],C=2*Math.PI*52,off=C*(1-clamp((R.purity-50)/(r.pure?50:49.1),0,1));
+  var value=Math.round(R.units*r.price*pm(R.purity));
+  var grade=R.purity>=100?'Идеал':R.purity>=99?'Легенда':R.purity>=95?'Безупречно':R.purity>=90?'Элита':R.purity>=80?'Отлично':R.purity>=70?'Хорошо':'Кустарщина';
+  var el=document.getElementById('b-result');
+  el.innerHTML='<h2>Партия готова</h2>'+
+   '<div class="pur"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="#0009" stroke-width="10"/><circle cx="60" cy="60" r="52" fill="none" stroke="#37d4ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><div class="c"><b>'+R.purity.toFixed(1)+'%</b><small>Чистота &middot; '+grade+'</small></div></div>'+
+   '<div class="rres"><div>Карамели<b>'+R.units+' шт.</b></div><div>Ценность ~<b>$'+money(value)+'</b></div><div>Температура<b>'+Math.round(R.tS*100)+'%</b></div><div>Ингредиенты<b>'+Math.round(R.aS*100)+'%</b></div></div>'+
+   (R.note?'<div class="pill" style="font-size:.78em;white-space:normal;text-align:center">'+R.note+'</div>':'')+
+   '<div class="pill b" style="font-size:.9em">'+ic('crystal')+'Кристаллов получено: '+R.cry+'</div>'+
+   '<div class="btn-row" style="width:100%"><button class="btn green" data-act="brewDone">'+ic('check')+'Забрать</button><button class="btn blue" data-act="brewAgain">'+ic('fire')+'Варить ещё</button></div>';
+  el.innerHTML=tr(el.innerHTML);el.classList.add('on');
+  checkThreats();
+}
+function endBrewScreen(to){sndHeat(false);B=null;cancelAnimationFrame(rafId);go(to||'lab');}
+
+/* ============================================================
+   ДЕЙСТВИЯ (делегирование кликов)
+   ============================================================ */
+function cycleRec(dir){
+  var u=S.rec.slice().sort(function(a,b){return a-b;}),i=u.indexOf(S.sel);
+  S.sel=u[(i+dir+u.length)%u.length];
+}
+document.addEventListener('click',function(e){
+  var mb=e.target.closest('[data-mi]');
+  if(mb){if(mb.disabled)return;sfx('tap');var f=modalBtns[+mb.dataset.mi];closeModal();if(f)f();return;}
+  var t=e.target.closest('[data-act]');if(!t||t.disabled)return;sfx('tap');
+  var a=t.dataset.act,d=t.dataset,now=Date.now();
+  switch(a){
+    case 'buyLaw':
+      if(S.lawyer>=3||S.cash<lawCost()){toast('Не хватает наличных','bad');break;}
+      sfx('up');S.cash-=lawCost();S.lawyer++;save();toast('Адвокат нанят');refresh();break;
+    case 'ordDo':{
+      var o=S.ord,os=o&&S.stock[o.rid];
+      if(!o||!os||os.q<o.q||os.p<o.minP){toast('Не хватает товара или чистоты','bad');break;}
+      var orev=Math.round(o.q*REC[o.rid].price*pm(os.p)*o.mul);
+      os.q-=o.q;if(os.q<1)delete S.stock[o.rid];
+      S.cash+=orev;S.st.earn+=orev;addHeat(5);S.ord=null;S.ordT=Date.now()+90000;
+      sfx('cash');toast('Заказ выполнен: $'+money(orev));save();refresh();break;}
+    case 'ordSkip':S.ord=null;S.ordT=Date.now()+60000;save();refresh();break;
+    case 'prestige':
+      if(S.st.earn<prestNeed()){toast('Рано для престижа','bad');break;}
+      openModal({t:'Начать заново?',x:'Прогресс будет сброшен. Останутся достижения, звание и постоянный бонус +10% к ценам. Вы получите 5 кристаллов.',btns:[
+        {l:'Начать заново',cls:'rust',fn:function(){var n=newState();n.prest=S.prest+1;n.ach=S.ach;n.day=S.day;n.streak=S.streak;n.story=1;n.cry=5;n.st.best=S.st.best;S=n;save();toast('Престиж '+S.prest+': +'+(S.prest*10)+'% к ценам');refresh();}},
+        {l:'Отмена',cls:'green',fn:function(){}}]});
+      break;
+    case 'expSave':{
+      var code='';try{code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));}catch(x){}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(function(){toast('Код сохранения скопирован');},function(){window.prompt('Скопируйте код сохранения:',code);});}
+      else window.prompt('Скопируйте код сохранения:',code);
+      break;}
+    case 'impSave':{
+      var inp=window.prompt('Вставьте код сохранения:');if(!inp)break;
+      try{var obj=JSON.parse(decodeURIComponent(escape(atob(inp.trim()))));S=migrate(obj);save();location.reload();}
+      catch(x){toast('Неверный код сохранения','bad');}
+      break;}
+    case 'bmode':S.bm=d.m;save();refresh();break;
+    case 'bcool':S.bc=!S.bc;save();refresh();break;
+    case 'hire':{
+      var hk=d.k,hl=S.staff[hk],hc=staffCost(hl);
+      if(hl>=5||S.cash<hc){toast('Не хватает наличных','bad');break;}
+      sfx('up');S.cash-=hc;S.staff[hk]=hl+1;save();toast(STAFF[hk][0]+': уровень '+(hl+1));refresh();break;}
+    case 'distGo':{
+      var di=+d.i,DD=DIST[di];
+      if(S.dunl.indexOf(di)<0){if(S.cash<DD.c){toast('Не хватает наличных','bad');break;}S.cash-=DD.c;S.dunl.push(di);}
+      S.dist=di;S.low=Date.now()+10000;sfx('up');save();toast('Переезд: '+DD.n);refresh();break;}
+    case 'story':showStory(0);break;
+    case 'menuGo':go(d.to);if(d.to==='lab'&&!S.story){S.story=1;save();showStory(0);}break;
+    case 'nav':
+      if(d.sub==='sell')mtab='sell';
+      go(d.to);break;
+    case 'menuReset':
+      openModal({t:'Сбросить прогресс?',x:'Все деньги, оборудование, рецепты, репутация и риски будут удалены безвозвратно.',btns:[
+        {l:'Да, сбросить всё',cls:'rust',fn:function(){try{localStorage.removeItem(SAVE_KEY);}catch(x){}S=newState();save();lastView='';sfx('reset');go('menu');toast('Прогресс сброшен.');}},
+        {l:'Отмена',cls:'dark'}]});
+      break;
+    case 'menuSet':go('settings');break;
+    case 'setBack':go('menu');break;
+    case 'lang':setLang(d.l);break;
+    case 'sndToggle':toggleSnd();break;
+    case 'recPrev':cycleRec(-1);save();refresh();break;
+    case 'recNext':cycleRec(1);save();refresh();break;
+    case 'potsDec':S.pots=Math.max(1,S.pots-1);save();refresh();break;
+    case 'potsInc':S.pots=Math.min(maxPots(),S.pots+1);save();refresh();break;
+    case 'brew':startBrew();break;
+    case 'lowlow':
+      if(S.low>now)break;
+      sfx('low');S.low=now+25000;save();toast('Вы залегли на дно на 25 секунд.');refresh();break;
+    case 'bribe':{
+      var c=bribeCost();if(S.cash<c){toast('Не хватает наличных','bad');break;}
+      sfx('coin');S.cash-=c;addHeat(-30);save();toast('Инспектор доволен. Внимание -30%.');refresh();break;}
+    case 'negot':{
+      var c2=negotCost();if(S.cash<c2){toast('Не хватает наличных','bad');break;}
+      sfx('coin');S.cash-=c2;S.cart=Math.max(0,S.cart-35);save();toast('Договорились. Давление картелей -35%.');refresh();break;}
+    case 'mtab':mtab=d.t;refresh();break;
+    case 'buy':{
+      var id=d.id,n=+d.n,p=ingPrice(id);
+      if(n===0)n=Math.min(999,Math.floor(S.cash/p));
+      if(n<1||S.cash<p*n){toast('Не хватает наличных','bad');break;}
+      sfx('coin');S.cash-=p*n;S.ing[id]=(S.ing[id]||0)+n;save();refresh();break;}
+    case 'sell':{
+      var r1=doSell(+d.ch,+d.rid);
+      if(r1){sfx('cash');toast('Продано '+r1.q+' шт. за $'+money(r1.rev));checkThreats();save();refresh();}
+      break;}
+    case 'sellall':{
+      var cid=+d.ch,c=CH[cid],tq=0,tr=0;
+      var ids=Object.keys(S.stock).map(Number).sort(function(x,y){return unitPrice(y,S.stock[y].p,c)-unitPrice(x,S.stock[x].p,c);});
+      ids.forEach(function(rid){if(!S.stock[rid])return;var rr=doSell(cid,rid,undefined,true);if(rr){tq+=rr.q;tr+=rr.rev;}});
+      if(tq){sfx('cash');toast('Продано '+tq+' шт. за $'+money(tr));checkThreats();save();refresh();}
+      else toast('Нечего продать: нет спроса или чистоты','bad');
+      break;}
+    case 'unlockCh':{
+      var uc=CH[+d.ch];
+      if(chReq(uc)){toast(chReq(uc),'bad');break;}
+      if(S.cash<uc.unlock){toast('Не хватает наличных','bad');break;}
+      sfx('up');S.cash-=uc.unlock;S.ch.unl.push(uc.id);
+      if(uc.passive)S.ch.mach=Math.max(1,S.ch.mach);else S.ch.dem[uc.id]=chMax(uc)*0.5;
+      save();toast('Канал открыт: '+uc.name);refresh();break;}
+    case 'buyMach':{
+      var mc=Math.round(2500*Math.pow(1.55,S.ch.mach));
+      if(S.ch.mach>=12||S.cash<mc){toast('Не хватает наличных','bad');break;}
+      sfx('up');S.cash-=mc;S.ch.mach++;save();refresh();break;}
+    case 'recPick':S.sel=+d.id;S.pots=Math.min(S.pots,maxPots());save();toast('Рецепт выбран для варки.');refresh();break;
+    case 'recUnlock':{
+      var rr=REC[+d.id];
+      if(S.rec.indexOf(rr.id)>=0)break;
+      if(S.lab<rr.labReq){toast('Нужна лаборатория ур.'+rr.labReq,'bad');break;}
+      if(S.cry<rr.unlock){toast('Не хватает кристаллов','bad');break;}
+      sfx('up');S.cry-=rr.unlock;S.rec.push(rr.id);S.sel=rr.id;save();toast('Рецепт открыт: '+rr.name);refresh();break;}
+    case 'buyLab':{
+      var L=LABS[+d.id-1];
+      if(L.id!==S.lab+1)break;
+      if(S.cash<L.cost||S.cry<L.cry){toast('Не хватает средств','bad');break;}
+      sfx('up');S.cash-=L.cost;S.cry-=L.cry;S.lab=L.id;save();toast('Новая локация: '+L.name);refresh();break;}
+    case 'buyEq':{
+      var E=null;EQUIP.forEach(function(x){if(x.id===d.id)E=x;});
+      var l=eq(E.id),cst=eqCost(E,l);
+      if(l>=5||S.cash<cst){toast('Не хватает наличных','bad');break;}
+      sfx('up');S.cash-=cst;S.eq[E.id]=l+1;save();toast(E.name+': уровень '+(l+1));refresh();break;}
+    case 'buyTech':{
+      var T=null;TECH.forEach(function(x){if(x.id===d.id)T=x;});
+      if(hasT(T.id))break;
+      if(S.cry<T.cost){toast('Не хватает кристаллов','bad');break;}
+      sfx('up');S.cry-=T.cost;S.tech[T.id]=1;save();toast('Технология изучена: '+T.name);refresh();break;}
+    case 'autoToggle':S.auto.on=!S.auto.on;S.auto.t=0;save();refresh();break;
+    case 'brewAbort':
+      if(!B||B.done)break;
+      B.paused=true;
+      openModal({t:'Прервать варку?',x:'Ингредиенты уже потрачены и будут потеряны.',btns:[
+        {l:'Прервать и потерять партию',cls:'rust',fn:function(){toast('Партия потеряна.','bad');endBrewScreen('lab');save();}},
+        {l:'Продолжить варить',cls:'green',fn:function(){if(B)B.paused=false;}}]});
+      break;
+    case 'brewResume':if(B)B.paused=false;break;
+    case 'brewDone':endBrewScreen('lab');break;
+    case 'brewAgain':
+      endBrewScreen('lab');startBrew();break;
+  }
+});
+document.addEventListener('keydown',function(e){
+  if(view!=='brew'||!B||e.repeat)return;
+  if(e.code==='Space'){e.preventDefault();B.hold=true;var h=document.getElementById('b-heat');if(h)h.classList.add('hold');}
+  if(e.code==='Enter'||e.code==='KeyE'){e.preventDefault();brewAdd();}
+});
+document.addEventListener('keyup',function(e){
+  if(e.code==='Space'&&B){B.hold=false;var h=document.getElementById('b-heat');if(h)h.classList.remove('hold');}
+});
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){if(B&&!B.done)B.paused=true;sndHeat(false);save();}
+  if(AC){try{if(document.hidden)AC.suspend();else AC.resume();}catch(x){}}
+});
+window.addEventListener('pagehide',save);
+window.addEventListener('beforeunload',save);
+
+/* ============================================================
+   ЗАПУСК
+   ============================================================ */
+function fitUI(){
+  var vv=window.visualViewport,W=(vv&&vv.width)||window.innerWidth,H=(vv&&vv.height)||window.innerHeight;
+  var w=Math.min(W,H*3/4),h=H;
+  var base=Math.min(w,h*9/16);
+  $('#phone').style.setProperty('--fs',Math.max(8,base/22.5).toFixed(2)+'px');
+}
+window.addEventListener('orientationchange',function(){setTimeout(fitUI,120);});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',fitUI);
+window.addEventListener('resize',fitUI);
+fitUI();
+['pointerdown','touchend','click','keydown'].forEach(function(n){document.addEventListener(n,audioInit,{passive:true});});
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='vol'){vol=Math.max(0,Math.min(1,(+e.target.value)/100));cfg.vol=vol;saveCfg();audioInit();setMaster();}
+});
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='mvol'){cfg.mvol=Math.max(0,Math.min(1,(+e.target.value)/100));saveCfg();musicVol();}
+});
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='vol')sfx('tap');});
+applyLang();
+
+(function init(){
+  var gap=(Date.now()-S.ts)/1000;
+  if(gap>15){
+    var before=S.cash;catchUp(gap);
+    if(S.cash>before+1)setTimeout(function(){toast('Пока вас не было, автоматы принесли $'+money(S.cash-before));},500);
+  }
+  S.low=S.low>Date.now()?S.low:0;
+  dailyBonus();
+  updateHud();
+  var last=Date.now(),nextEv=Date.now()+70000,lastSave=Date.now(),slow=0;
+  setInterval(function(){
+    var now=Date.now(),dt=(now-last)/1000;last=now;
+    if(dt>3){catchUp(dt);dt=0.25;}
+    tick(dt,false);
+    if(view!=='menu')updateLive();
+    slow+=dt;
+    if(slow>=1){slow=0;checkThreats();checkAch();ordTick();checkQuest();staffTick(1);}
+    if(now>nextEv){
+      nextEv=now+rnd(80000,150000);
+      if(view!=='menu'&&view!=='brew'&&view!=='settings'&&!modalOpen&&!escBusy&&S.st.batches>0)triggerEvent();
+    }
+    if(now-lastSave>5000){lastSave=now;save();}
+  },250);
+})();
+
+})();
+</script>
+</body>
+</html>
